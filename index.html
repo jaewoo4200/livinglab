@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>혼자ON 2차 MVP 데모</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="site-shell">
+    <header class="hero">
+      <div class="hero-copy">
+        <span class="eyebrow">Responsive Web MVP Demo</span>
+        <h1>혼자ON <span>2차 MVP</span></h1>
+        <p class="hero-subtitle">1인 가구 생활의 <strong>정보·안전·접근성</strong> 문제를 한곳에서 풀어주는 웹 기반 생활 운영 플랫폼</p>
+        <div class="hero-actions">
+          <button class="primary-btn" data-go-view="dashboard">프로토타입 보기</button>
+          <button class="ghost-btn" data-go-view="roadmap">1차 vs 2차 비교</button>
+        </div>
+        <ul class="hero-tags">
+          <li>첫 자취 온보딩</li>
+          <li>생활비·공과금 관리</li>
+          <li>도움 요청 라우팅</li>
+          <li>외국인 다국어 지원</li>
+          <li>고령자 케어 모드</li>
+        </ul>
+      </div>
+      <div class="hero-panel">
+        <div class="metric-card">
+          <p class="metric-label">2차 MVP 핵심 전환</p>
+          <h3>정보 모음집 → <br />상황 대응형 생활 운영 OS</h3>
+          <p>개인화, 지역 정보, 긴급 대응, 다국어, 케어 모드까지 확장</p>
+        </div>
+        <div class="metric-grid">
+          <div class="metric-mini">
+            <span>핵심 사용자군</span>
+            <strong>4 Persona</strong>
+          </div>
+          <div class="metric-mini">
+            <span>주요 모듈</span>
+            <strong>7 Modules</strong>
+          </div>
+          <div class="metric-mini">
+            <span>접속 환경</span>
+            <strong>Mobile + Desktop</strong>
+          </div>
+          <div class="metric-mini">
+            <span>실행 원칙</span>
+            <strong>2 Tap Safety</strong>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <section class="roadmap-summary">
+      <article class="roadmap-card roadmap-phase-1">
+        <div class="phase-badge">1차 MVP</div>
+        <h2>핵심 수요 검증 단계</h2>
+        <p>온보딩 체크리스트, 생활 가이드, 공과금 리마인더, 기본 도움 요청 템플릿</p>
+      </article>
+      <article class="roadmap-card roadmap-phase-2 active-phase">
+        <div class="phase-badge">2차 MVP</div>
+        <h2>맥락형 지원 플랫폼 단계</h2>
+        <p>페르소나별 대시보드, 지역 맞춤 정보, 안전 센터, 다국어 지원, 케어 모드, 이슈 히스토리</p>
+      </article>
+      <article class="roadmap-card roadmap-phase-3">
+        <div class="phase-badge">3차 확장</div>
+        <h2>연결 생태계 단계</h2>
+        <p>학교·복지관·관리실·지역 병원·수리 파트너 연동, PWA 알림, 운영 대시보드</p>
+      </article>
+    </section>
+
+    <section class="persona-section">
+      <div class="section-header">
+        <div>
+          <span class="eyebrow">Core Personas</span>
+          <h2>2차 MVP가 동시에 품는 사용자</h2>
+        </div>
+        <p>페르소나를 고르는 순간 홈 구성과 빠른 행동이 달라집니다.</p>
+      </div>
+      <div class="persona-grid" id="personaGrid"></div>
+    </section>
+
+    <nav class="app-nav" aria-label="앱 주요 화면">
+      <button class="nav-chip active" data-view="dashboard">대시보드</button>
+      <button class="nav-chip" data-view="onboarding">온보딩</button>
+      <button class="nav-chip" data-view="life">생활 관리</button>
+      <button class="nav-chip" data-view="help">도움 요청</button>
+      <button class="nav-chip" data-view="safety">안전 센터</button>
+      <button class="nav-chip" data-view="global">글로벌 모드</button>
+      <button class="nav-chip" data-view="care">케어 모드</button>
+      <button class="nav-chip" data-view="roadmap">로드맵</button>
+    </nav>
+
+    <main id="app"></main>
+
+    <footer class="site-footer">
+      <div>
+        <strong>혼자ON 2차 MVP 데모</strong>
+        <p>정적 HTML/CSS/JS 프로토타입 · 로컬에서 바로 실행 가능</p>
+      </div>
+      <div class="footer-links">
+        <span>권장 사용: Chrome / Edge</span>
+        <span>모든 데이터는 데모용 목업</span>
+      </div>
+    </footer>
+  </div>
+
+  <div id="toast" class="toast" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>
