@@ -4,9 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>혼자ON 생활 지원</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+  <a class="skip-link" href="#app">본문으로 건너뛰기</a>
   <div class="site-shell">
     <header class="hero">
       <div class="hero-copy">
@@ -14,7 +16,7 @@
         <h1>혼자ON <span>생활 지원</span></h1>
         <p class="hero-subtitle">1인 가구 생활의 <strong>정보·안전·접근성</strong> 문제를 한곳에서 풀어주는 웹 기반 생활 운영 플랫폼</p>
         <div class="hero-actions">
-          <button class="primary-btn" data-go-view="dashboard">오늘의 홈 보기</button>
+          <button class="primary-btn" data-scroll-target="personaSection">내 상황 선택하기</button>
           <button class="ghost-btn" data-go-view="roadmap">서비스 구조 보기</button>
         </div>
         <ul class="hero-tags">
@@ -53,6 +55,21 @@
       </div>
     </header>
 
+    <section class="persona-section" id="personaSection" aria-labelledby="personaTitle">
+      <div class="section-header">
+        <div>
+          <span class="eyebrow">Core Personas</span>
+          <h2 id="personaTitle">나에게 가까운 생활 상황 선택</h2>
+        </div>
+        <p>이름보다 상황을 먼저 고르면 홈 구성과 빠른 행동이 달라집니다.</p>
+      </div>
+      <div class="persona-grid" id="personaGrid"></div>
+    </section>
+
+    <nav class="app-nav" id="appNav" aria-label="앱 주요 화면"></nav>
+
+    <main id="app" tabindex="-1"></main>
+
     <section class="roadmap-summary">
       <article class="roadmap-card roadmap-phase-1">
         <div class="phase-badge">기본 생활</div>
@@ -71,21 +88,6 @@
       </article>
     </section>
 
-    <section class="persona-section">
-      <div class="section-header">
-        <div>
-          <span class="eyebrow">Core Personas</span>
-          <h2>혼자ON이 맞춰 보는 생활 유형</h2>
-        </div>
-        <p>페르소나를 고르는 순간 홈 구성과 빠른 행동이 달라집니다.</p>
-      </div>
-      <div class="persona-grid" id="personaGrid"></div>
-    </section>
-
-    <nav class="app-nav" id="appNav" aria-label="앱 주요 화면"></nav>
-
-    <main id="app"></main>
-
     <footer class="site-footer">
       <div>
         <strong>혼자ON</strong>
@@ -98,7 +100,7 @@
     </footer>
   </div>
 
-  <div id="toast" class="toast" aria-live="polite"></div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <script src="app.js"></script>
 </body>
 </html>

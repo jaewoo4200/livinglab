@@ -13,7 +13,9 @@ const personas = {
     priorities: ['전입신고 / 입주 체크', '공과금·고정비 관리', '집안일 루틴 만들기'],
     risk: '무엇을 언제 해야 하는지 구조화되지 않으면 생활 루틴이 쉽게 무너진다.',
     quickAction: '첫 자취 체크리스트 시작',
-    moduleHint: '온보딩 + 생활 관리 + 수리 가이드'
+    moduleHint: '정착 체크 + 생활 관리 + 수리 가이드',
+    choiceLabel: '첫 자취 정착',
+    choiceSummary: '입주 직후 해야 할 일, 공과금, 집안일 루틴을 빠르게 정리하고 싶은 경우'
   },
   seoyeon: {
     id: 'seoyeon',
@@ -28,7 +30,9 @@ const personas = {
     priorities: ['야간 귀가 안전', '병원·약국·수리처 연결', '도움 요청 템플릿'],
     risk: '정보보다도 누구에게 연락해야 할지 모르는 순간 행동이 지연된다.',
     quickAction: '안전 센터 바로 열기',
-    moduleHint: '도움 요청 + 안전 센터'
+    moduleHint: '안전 센터 + 도움 요청',
+    choiceLabel: '안전·도움 요청',
+    choiceSummary: '야간 귀가, 아플 때, 수리 요청처럼 혼자 판단하기 부담스러운 순간이 많은 경우'
   },
   jeongsuk: {
     id: 'jeongsuk',
@@ -43,7 +47,9 @@ const personas = {
     priorities: ['원터치 도움 요청', '큰 글씨·음성 안내', '정기 안부 체크'],
     risk: '새 기능이 많아질수록 사용성이 떨어지고, 사람과의 연결이 끊기면 취약해진다.',
     quickAction: '케어 모드 켜기',
-    moduleHint: '케어 모드 + 안전 센터'
+    moduleHint: '큰 글씨 도움 모드 + 안전 센터',
+    choiceLabel: '큰 글씨 케어',
+    choiceSummary: '원터치 연락, 정기 안부 체크, 큰 버튼 중심의 화면이 필요한 경우'
   },
   jenny: {
     id: 'jenny',
@@ -58,7 +64,9 @@ const personas = {
     priorities: ['간편한 주문 과정', '번역·채팅 중심 의사소통', '정확한 ETA와 다국어 생활 가이드'],
     risk: '기사님 전화, 주소 입력, 고객센터 흐름이 낯설면 주문 진행 정보가 불안으로 이어진다.',
     quickAction: '글로벌 모드 열기',
-    moduleHint: '글로벌 모드 + 배달/생활 가이드'
+    moduleHint: '외국어 생활 지원 + 배달/생활 가이드',
+    choiceLabel: '외국어 생활 지원',
+    choiceSummary: '한국어 주문, 주소, 기사님 연락, 생활 제도 이해가 아직 부담스러운 경우'
   }
 };
 
@@ -254,17 +262,17 @@ const moduleCatalog = [
   { view: 'life', label: '생활 관리', personas: ['junho', 'seoyeon'] },
   { view: 'help', label: '도움 요청', personas: ['junho', 'seoyeon', 'jenny'] },
   { view: 'safety', label: '안전 센터', personas: ['seoyeon', 'jeongsuk'] },
-  { view: 'global', label: '글로벌 모드', personas: ['jenny'] },
-  { view: 'care', label: '케어 모드', personas: ['jeongsuk'] },
+  { view: 'global', label: '외국어 지원', personas: ['jenny'] },
+  { view: 'care', label: '큰 글씨 도움', personas: ['jeongsuk'] },
   { view: 'activity', label: '활동 이력', always: true },
   { view: 'roadmap', label: '서비스 구조', always: true }
 ];
 
 const preferredViews = {
-  junho: 'onboarding',
-  seoyeon: 'safety',
-  jenny: 'global',
-  jeongsuk: 'care'
+  junho: 'dashboard',
+  seoyeon: 'dashboard',
+  jenny: 'dashboard',
+  jeongsuk: 'dashboard'
 };
 
 const personaQuickActions = {
@@ -279,37 +287,146 @@ const personaQuickActions = {
     { view: 'onboarding', label: '도움망 저장' }
   ],
   jenny: [
-    { view: 'global', label: '번역 문구' },
+    { view: 'global', label: '외국어 문구' },
     { view: 'help', label: '생활 제도 안내' },
     { view: 'onboarding', label: '정착 설정' }
   ],
   jeongsuk: [
-    { view: 'care', label: '큰 버튼 모드' },
+    { view: 'care', label: '큰 글씨 도움' },
     { view: 'safety', label: '119·보호자' },
     { view: 'activity', label: '안부 이력' }
   ]
 };
 
-function loadJSON(key, fallback) {
+const emergencyFlows = {
+  '119': {
+    type: '119',
+    title: '119 전화 준비',
+    label: '119 전화',
+    detail: '전화 앱을 열기 전 현재 상황과 전달 문구를 한 번 더 확인합니다.',
+    message: '응급 상황입니다. 현재 혼자 있고 도움이 필요합니다. 주소와 증상을 차분히 전달할 준비를 합니다.',
+    primaryLabel: '전화 앱 열기',
+    href: 'tel:119',
+    status: '전화 전 확인'
+  },
+  guardian: {
+    type: 'guardian',
+    title: '보호자 공유 준비',
+    label: '보호자 공유',
+    detail: '신뢰 연락처에 보낼 문구를 먼저 확인하고 복사할 수 있습니다.',
+    message: '지금 혼자 있고 조금 불안합니다. 10분 뒤 다시 확인 부탁드릴게요. 답이 없으면 전화해 주세요.',
+    primaryLabel: '준비 완료로 기록',
+    status: '공유 전 확인'
+  },
+  manager: {
+    type: 'manager',
+    title: '관리실 연락 준비',
+    label: '관리실 연락',
+    detail: '주거 문제를 관리실이나 경비실에 전달하기 전에 핵심 문구를 정리합니다.',
+    message: '안녕하세요. 혼자 거주 중인데 현재 도움이 필요한 상황입니다. 확인 후 연락 부탁드립니다.',
+    primaryLabel: '준비 완료로 기록',
+    status: '연락 전 확인'
+  },
+  caregiver: {
+    type: 'caregiver',
+    title: '복지사 호출 준비',
+    label: '복지사 호출',
+    detail: '돌봄 담당자에게 보낼 도움 요청 문구를 먼저 확인합니다.',
+    message: '현재 도움이 필요한 상황입니다. 가능한 시간에 안부 확인과 연락 부탁드립니다.',
+    primaryLabel: '준비 완료로 기록',
+    status: '호출 전 확인'
+  }
+};
+
+const statusLabels = {
+  viewed: '확인',
+  copied: '복사됨',
+  pending: '준비 중',
+  ready: '준비 완료',
+  completed: '완료',
+  cancelled: '취소됨',
+  changed: '변경됨'
+};
+
+function isPlainObject(value) {
+  return value && typeof value === 'object' && !Array.isArray(value);
+}
+
+function storageGet(key) {
   try {
-    const raw = localStorage.getItem(key);
+    return localStorage.getItem(key);
+  } catch (error) {
+    return null;
+  }
+}
+
+function storageSet(key, value) {
+  try {
+    localStorage.setItem(key, value);
+    return true;
+  } catch (error) {
+    showToast('브라우저 저장소를 사용할 수 없어 현재 화면에서만 반영됩니다.');
+    return false;
+  }
+}
+
+function storageRemove(key) {
+  try {
+    localStorage.removeItem(key);
+  } catch (error) {
+    // Ignore storage cleanup failures in restricted browser modes.
+  }
+}
+
+function normalizeActivities(value) {
+  if (!Array.isArray(value)) return [];
+  return value
+    .filter(item => item && typeof item === 'object' && typeof item.title === 'string')
+    .map(item => ({
+      id: item.id || `log_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`,
+      type: item.type || 'help',
+      title: item.title,
+      detail: item.detail || '',
+      actionView: item.actionView || null,
+      actionText: item.actionText || null,
+      personaId: item.personaId || null,
+      personaName: item.personaName || '사용자',
+      createdAt: item.createdAt || null,
+      time: item.time || timeLabel(item.createdAt),
+      status: item.status || 'viewed'
+    }))
+    .slice(0, 16);
+}
+
+function normalizeCareStatus(value) {
+  return isPlainObject(value) ? {
+    lastCheckinAt: value.lastCheckinAt || null,
+    lastCheckinLabel: value.lastCheckinLabel || null
+  } : { lastCheckinAt: null, lastCheckinLabel: null };
+}
+
+function loadJSON(key, fallback, normalize = null) {
+  try {
+    const raw = storageGet(key);
     if (!raw) return fallback;
     const parsed = JSON.parse(raw);
-    return parsed && typeof parsed === 'object' ? parsed : fallback;
+    if (normalize) return normalize(parsed);
+    if (Array.isArray(fallback)) return Array.isArray(parsed) ? parsed : fallback;
+    return isPlainObject(parsed) ? parsed : fallback;
   } catch (error) {
-    localStorage.removeItem(key);
+    storageRemove(key);
     return fallback;
   }
 }
 
 function saveJSON(key, value) {
-  localStorage.setItem(key, JSON.stringify(value));
+  storageSet(key, JSON.stringify(value));
 }
 
 function savedPersona() {
-  const personaId = localStorage.getItem('honjaonPersona');
+  const personaId = storageGet('honjaonPersona');
   if (personaId === 'wooho') return 'jenny';
-  return personas[personaId] ? personaId : 'junho';
+  return personas[personaId] ? personaId : null;
 }
 
 const state = {
@@ -317,17 +434,25 @@ const state = {
   view: 'dashboard',
   scenario: 'admin',
   language: 'ru',
+  navMoreOpen: false,
+  pendingAction: null,
+  timerOwnerPersonaId: null,
   timerRunning: false,
   remainingSeconds: 30 * 60,
   timerId: null,
   checklist: loadJSON('honjaonChecklist', {}),
-  activities: loadJSON('honjaonActivities', [])
+  activities: loadJSON('honjaonActivities', [], normalizeActivities),
+  careStatus: loadJSON('honjaonCareStatus', { lastCheckinAt: null, lastCheckinLabel: null }, normalizeCareStatus)
 };
 
 const app = document.getElementById('app');
 const personaGrid = document.getElementById('personaGrid');
 const appNav = document.getElementById('appNav');
 const toast = document.getElementById('toast');
+
+function currentPersona() {
+  return personas[state.persona] || null;
+}
 
 function activeModulesFor(personaId = state.persona) {
   return moduleCatalog.filter(module => module.always || module.personas.includes(personaId));
@@ -346,20 +471,49 @@ function preferredViewFor(personaId) {
   return preferredViews[personaId] || 'dashboard';
 }
 
+function prefersReducedMotion() {
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+}
+
+function primaryNavViews() {
+  const quickViews = (personaQuickActions[state.persona] || [])
+    .map(action => action.view)
+    .filter(view => isViewAvailable(view));
+  return new Set(['dashboard', ...quickViews.slice(0, 3), state.view]);
+}
+
 function renderNav() {
+  const primaryViews = primaryNavViews();
   appNav.innerHTML = activeModulesFor().map(module => `
-    <button class="nav-chip ${state.view === module.view ? 'active' : ''}" data-view="${module.view}">${module.label}</button>
-  `).join('');
+    <button
+      class="nav-chip ${state.view === module.view ? 'active' : ''} ${primaryViews.has(module.view) ? 'mobile-primary' : 'mobile-extra'}"
+      data-view="${module.view}"
+      ${state.view === module.view ? 'aria-current="page"' : ''}
+    >${module.label}</button>
+  `).join('') + `
+    <button class="nav-chip nav-more-toggle ${state.navMoreOpen ? 'active' : ''}" type="button" aria-expanded="${state.navMoreOpen}" aria-controls="appNav">더보기</button>
+  `;
 
   appNav.querySelectorAll('.nav-chip').forEach(chip => {
+    if (chip.classList.contains('nav-more-toggle')) return;
     chip.addEventListener('click', () => setView(chip.dataset.view));
   });
+
+  const moreToggle = appNav.querySelector('.nav-more-toggle');
+  if (moreToggle) {
+    moreToggle.addEventListener('click', () => {
+      state.navMoreOpen = !state.navMoreOpen;
+      renderNav();
+    });
+  }
+
+  appNav.classList.toggle('more-open', state.navMoreOpen);
 
   const activeChip = appNav.querySelector('.nav-chip.active');
   if (activeChip) {
     window.requestAnimationFrame(() => {
       const targetLeft = activeChip.offsetLeft - (appNav.clientWidth - activeChip.clientWidth) / 2;
-      appNav.scrollTo({ left: Math.max(0, targetLeft), behavior: 'smooth' });
+      appNav.scrollTo({ left: Math.max(0, targetLeft), behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
     });
   }
 }
@@ -371,15 +525,30 @@ function showToast(message) {
   showToast.timeout = setTimeout(() => toast.classList.remove('show'), 1800);
 }
 
-function timeLabel() {
+function timeLabel(value = new Date()) {
+  const date = value ? new Date(value) : new Date();
+  if (Number.isNaN(date.getTime())) return '시간 미상';
   return new Intl.DateTimeFormat('ko-KR', {
     hour: '2-digit',
     minute: '2-digit'
-  }).format(new Date());
+  }).format(date);
 }
 
-function addActivity(type, title, detail, actionView = null, actionText = null) {
-  const persona = personas[state.persona];
+function dateTimeLabel(value = new Date()) {
+  const date = value ? new Date(value) : new Date();
+  if (Number.isNaN(date.getTime())) return timeLabel();
+  return new Intl.DateTimeFormat('ko-KR', {
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  }).format(date);
+}
+
+function addActivity(type, title, detail, actionView = null, actionText = null, options = {}) {
+  const personaId = options.personaId === undefined ? state.persona : options.personaId;
+  const persona = personas[personaId];
+  const createdAt = options.createdAt || new Date().toISOString();
   const item = {
     id: `log_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`,
     type,
@@ -387,12 +556,15 @@ function addActivity(type, title, detail, actionView = null, actionText = null) 
     detail,
     actionView,
     actionText,
-    personaId: state.persona,
+    personaId,
     personaName: persona ? persona.name : '사용자',
-    time: timeLabel()
+    createdAt,
+    time: timeLabel(createdAt),
+    status: options.status || 'viewed'
   };
   state.activities = [item, ...state.activities].slice(0, 16);
   saveJSON('honjaonActivities', state.activities);
+  return item;
 }
 
 function activityLabel(type) {
@@ -402,15 +574,26 @@ function activityLabel(type) {
     help: '도움 요청',
     safety: '안전',
     care: '케어',
-    persona: '모드 전환'
+    persona: '상황 전환',
+    action: '실행 준비'
   };
   return labels[type] || '활동';
 }
 
-function copyText(text, label = '문구') {
+function copyText(text, label = '문구', sourceButton = null) {
+  const previousFocus = document.activeElement;
   const handleSuccess = () => {
     showToast('복사되었습니다.');
-    addActivity('copy', `${label} 복사`, text, 'activity', '이력 보기');
+    addActivity('copy', `${label} 복사`, text, 'activity', '이력 보기', { status: 'copied' });
+    if (sourceButton) {
+      const original = sourceButton.textContent;
+      sourceButton.textContent = '복사됨';
+      sourceButton.setAttribute('aria-label', `${label} 복사됨`);
+      window.setTimeout(() => {
+        sourceButton.textContent = original;
+        sourceButton.removeAttribute('aria-label');
+      }, 1400);
+    }
   };
   const handleFailure = () => showToast('복사에 실패했습니다.');
 
@@ -429,6 +612,9 @@ function copyText(text, label = '문구') {
     handleFailure();
   }
   document.body.removeChild(textArea);
+  if (previousFocus && typeof previousFocus.focus === 'function') {
+    previousFocus.focus({ preventScroll: true });
+  }
 }
 
 function filteredTasks(personaId) {
@@ -446,25 +632,35 @@ function progressRatio(personaId) {
 }
 
 function setPersona(personaId) {
+  if (!personas[personaId]) return;
   state.persona = personaId;
-  state.view = preferredViewFor(personaId);
+  state.view = 'dashboard';
+  state.navMoreOpen = false;
+  state.pendingAction = null;
   if (personaId === 'jenny') state.language = 'ru';
-  localStorage.setItem('honjaonPersona', personaId);
-  addActivity('persona', `${personas[personaId].name} 모드 전환`, personas[personaId].moduleHint, 'dashboard', '홈 보기');
+  storageSet('honjaonPersona', personaId);
+  addActivity('persona', `${personas[personaId].choiceLabel} 선택`, personas[personaId].moduleHint, 'dashboard', '홈 보기', { status: 'changed' });
   renderNav();
   renderPersonaGrid();
-  renderView();
-  showToast(`${personas[personaId].name} 모드로 전환되었습니다.`);
+  renderView({ focusTarget: '.view-title' });
+  scrollToApp();
+  showToast(`${personas[personaId].choiceLabel} 홈으로 전환되었습니다.`);
 }
 
 function setView(view) {
   const nextView = isViewAvailable(view) ? view : preferredViewFor(state.persona);
   if (nextView !== view) {
-    showToast(`${personas[state.persona].name} 모드에서는 ${moduleLabel(nextView)}을 먼저 보여드립니다.`);
+    const persona = currentPersona();
+    showToast(persona ? `${persona.choiceLabel}에서는 ${moduleLabel(nextView)}을 먼저 보여드립니다.` : '먼저 생활 상황을 선택해 주세요.');
   }
   state.view = nextView;
+  state.navMoreOpen = false;
   renderNav();
-  renderView();
+  renderView({ focusTarget: '.view-title' });
+  scrollToApp();
+}
+
+function scrollToApp() {
   const appTop = app.getBoundingClientRect().top + window.scrollY;
   const isMobile = window.matchMedia('(max-width: 720px)').matches;
   const offset = isMobile ? 12 : 18;
@@ -478,25 +674,33 @@ function setView(view) {
     });
     return;
   }
-  window.scrollTo({ top: targetTop, behavior: 'smooth' });
+  window.scrollTo({ top: targetTop, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
+}
+
+function scrollToSection(sectionId) {
+  const target = document.getElementById(sectionId);
+  if (!target) return;
+  const top = Math.max(0, target.getBoundingClientRect().top + window.scrollY - 16);
+  window.scrollTo({ top, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
 }
 
 function renderPersonaGrid() {
   personaGrid.innerHTML = Object.values(personas).map(persona => `
-    <article class="persona-card ${state.persona === persona.id ? 'selected' : ''}">
+    <article class="persona-card ${state.persona === persona.id ? 'selected' : ''}" aria-label="${persona.choiceLabel}">
       <div class="persona-photo-wrap">
-        <img class="persona-photo" src="${persona.photo}" alt="${persona.name} 페르소나 사진" loading="lazy" />
+        <img class="persona-photo" src="${persona.photo}" alt="${persona.choiceLabel} 상황 예시 이미지" loading="lazy" />
       </div>
       <div class="persona-top">
         <div class="persona-avatar" style="background:${persona.color}">${persona.avatar}</div>
-        <span class="persona-chip">${state.persona === persona.id ? '현재 선택' : '클릭해서 전환'}</span>
+        <span class="persona-chip">${state.persona === persona.id ? '현재 선택' : '상황 선택'}</span>
       </div>
-      <h3>${persona.name}</h3>
-      <p class="description">${persona.title}</p>
+      <h3>${persona.choiceLabel}</h3>
+      <p class="description">${persona.choiceSummary}</p>
       <p class="persona-quote">“${persona.quote}”</p>
       <div class="persona-meta">${persona.tags.map(tag => `<span class="persona-pill">${tag}</span>`).join('')}</div>
-      <p class="persona-footer"><strong>핵심 모듈</strong> · ${persona.moduleHint}</p>
-      <button data-persona="${persona.id}">${state.persona === persona.id ? '선택됨' : '이 페르소나로 보기'}</button>
+      <p class="persona-footer"><strong>예시 인물</strong> · ${persona.name}, ${persona.title}</p>
+      <p class="persona-footer"><strong>핵심 흐름</strong> · ${persona.moduleHint}</p>
+      <button data-persona="${persona.id}" aria-pressed="${state.persona === persona.id}">${state.persona === persona.id ? '선택됨' : '이 상황으로 홈 보기'}</button>
     </article>
   `).join('');
 
@@ -507,6 +711,30 @@ function renderPersonaGrid() {
 
 function dashboardView() {
   const persona = personas[state.persona];
+  if (!persona) {
+    return `
+      <section class="view-layout">
+        <article class="app-card onboarding-gate">
+          <span class="kicker">상황 선택 필요</span>
+          <h2 class="view-title">나에게 가까운 생활 상황을 먼저 골라 주세요</h2>
+          <p class="description">혼자ON은 이름이나 나이보다 지금 겪는 문제를 기준으로 홈, 빠른 행동, 도움 요청 흐름을 바꿉니다.</p>
+          <div class="quick-action-row" style="margin-top:16px;">
+            <button class="quick-btn" data-scroll-target="personaSection">상황 선택하기</button>
+            <button class="quick-btn secondary" data-go-view="roadmap">서비스 구조 보기</button>
+          </div>
+        </article>
+        <article class="app-card">
+          <span class="kicker">첫 30초 흐름</span>
+          <h3>상황 선택 → 개인화 홈 → 추천 행동</h3>
+          <div class="timeline">
+            <div class="timeline-item"><strong>1. 현재 상황 선택</strong><p>첫 자취, 안전 도움, 외국어 지원, 큰 글씨 케어 중 가까운 문제를 고릅니다.</p></div>
+            <div class="timeline-item"><strong>2. 개인화 홈 확인</strong><p>필요한 모듈만 하단 탐색과 홈 카드에 나타납니다.</p></div>
+            <div class="timeline-item"><strong>3. 바로 실행</strong><p>체크리스트, 번역 문구, 안전 확인, 케어 버튼으로 이어집니다.</p></div>
+          </div>
+        </article>
+      </section>
+    `;
+  }
   const tasks = filteredTasks(state.persona).slice(0, 3);
   const ratio = progressRatio(state.persona);
   const personaModules = activeModulesFor().filter(module => !module.always);
@@ -516,14 +744,14 @@ function dashboardView() {
       <article class="app-card">
         <span class="kicker">개인화 대시보드</span>
         <div class="dashboard-profile">
-          <img src="${persona.photo}" alt="${persona.name} 페르소나 사진" />
+          <img src="${persona.photo}" alt="${persona.choiceLabel} 상황 예시 이미지" />
           <div>
-            <h2 class="view-title">${persona.name}에게 맞춰진 오늘의 홈</h2>
+            <h2 class="view-title">${persona.choiceLabel}에 맞춘 오늘의 홈</h2>
             <p class="description">${persona.summary}</p>
           </div>
         </div>
         <div class="mode-strip">
-          <strong>${persona.name} 특화 모드</strong>
+          <strong>${persona.choiceLabel} 특화 흐름</strong>
           <div class="mode-module-list">
             ${personaModules.map(module => `<span>${module.label}</span>`).join('')}
           </div>
@@ -570,7 +798,7 @@ function dashboardView() {
         <div class="mini-phone">
           <div class="phone-notch"></div>
           <div class="phone-card">
-            <strong>${persona.name} 홈</strong>
+            <strong>${persona.choiceLabel} 홈</strong>
             <div class="phone-line" style="width:75%"></div>
             <div class="phone-line" style="width:52%"></div>
             <div class="phone-pill">${persona.quickAction}</div>
@@ -589,7 +817,7 @@ function dashboardView() {
     <section class="grid-3">
       <article class="app-card">
         <span class="kicker">핵심 모듈</span>
-        <h3>Start Pack</h3>
+        <h3>정착 시작 패키지</h3>
         <ul class="bullet-list">
           <li>입주 첫 주 우선순위 자동 정렬</li>
           <li>준비물 / 링크 / 연락처 묶음 제공</li>
@@ -598,7 +826,7 @@ function dashboardView() {
       </article>
       <article class="app-card">
         <span class="kicker">핵심 모듈</span>
-        <h3>Help Route</h3>
+        <h3>도움 요청 경로</h3>
         <ul class="bullet-list">
           <li>증상 / 문제 / 상황 선택만으로 분기</li>
           <li>누구에게 연락할지 자동 제안</li>
@@ -607,7 +835,7 @@ function dashboardView() {
       </article>
       <article class="app-card">
         <span class="kicker">핵심 모듈</span>
-        <h3>Safety Net</h3>
+        <h3>생활 안전망</h3>
         <ul class="bullet-list">
           <li>2탭 안에 구조 요청</li>
           <li>귀가 확인 타이머 / 안부 체크</li>
@@ -625,12 +853,12 @@ function onboardingView() {
   return `
     <section class="view-layout">
       <article class="app-card">
-        <span class="kicker">Start Pack</span>
+        <span class="kicker">정착 시작 패키지</span>
         <h2 class="view-title">${persona.name}의 초기 정착 체크리스트</h2>
         <p class="description">처음 자취를 시작하거나 정착 초기일수록 “정보가 흩어져 있다”는 문제가 커집니다. 체크리스트는 사용자 유형과 거주 단계에 맞춰 필요한 항목만 먼저 보여줍니다.</p>
         <div class="progress-wrap">
           <div style="min-width:100px;"><strong>${ratio}% 완료</strong></div>
-          <div class="progress-bar"><div class="progress-fill" style="width:${ratio}%"></div></div>
+          <div class="progress-bar" role="progressbar" aria-label="초기 정착 체크리스트 진행률" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${ratio}"><div class="progress-fill" style="width:${ratio}%"></div></div>
         </div>
         <div class="check-group">
           ${tasks.map(task => `
@@ -757,12 +985,12 @@ function helpView() {
   return `
     <section class="view-layout">
       <article class="app-card">
-        <span class="kicker">Help Route</span>
+        <span class="kicker">도움 요청 경로</span>
         <h2 class="view-title">문제가 생기면, 누구에게 어떻게 요청할까?</h2>
         <p class="description">사용자는 문제 자체보다도 <strong>누구에게, 어떤 말로, 어떤 순서로</strong> 요청해야 하는지에서 막히는 경우가 많습니다. 혼자ON은 이 과정을 3스텝으로 줄입니다.</p>
         <div class="segment-row">
           ${Object.entries(helpScenarios).map(([key, value]) => `
-            <button class="segment-btn ${state.scenario === key ? 'active' : ''}" data-scenario="${key}">
+            <button class="segment-btn ${state.scenario === key ? 'active' : ''}" data-scenario="${key}" aria-pressed="${state.scenario === key}">
               <strong>${value.title}</strong><br />
               <small>${value.audience}</small>
             </button>
@@ -815,39 +1043,71 @@ function helpView() {
   `;
 }
 
+function pendingActionPanel() {
+  if (!state.pendingAction) {
+    return `
+      <div class="empty-state compact">
+        <strong>아직 준비 중인 연락이 없습니다</strong>
+        <p class="helper-text">안전 버튼을 누르면 실제 연락 전에 확인 화면과 전달 문구가 먼저 열립니다.</p>
+      </div>
+    `;
+  }
+  const flow = emergencyFlows[state.pendingAction.type];
+  if (!flow) return '';
+  return `
+    <div class="action-confirm-panel" aria-live="polite">
+      <div class="screen-header">
+        <div>
+          <span class="status-pill warn">${flow.status}</span>
+          <h3>${flow.title}</h3>
+        </div>
+      </div>
+      <p class="helper-text">${flow.detail}</p>
+      <div class="template-body">${flow.message}</div>
+      <div class="quick-action-row action-row">
+        <button class="copy-btn" data-copy="${encodeURIComponent(flow.message)}" data-copy-label="${encodeURIComponent(flow.label)}">문구 복사</button>
+        ${flow.href ? `<a class="action-link primary" href="${flow.href}" aria-label="${flow.label} 전화 앱 열기">${flow.primaryLabel}</a>` : `<button class="quick-btn" data-confirm-emergency="${flow.type}">${flow.primaryLabel}</button>`}
+        <button class="inline-chip" data-cancel-emergency>취소</button>
+      </div>
+    </div>
+  `;
+}
+
 function safetyView() {
   const minutes = Math.floor(state.remainingSeconds / 60);
   const seconds = String(state.remainingSeconds % 60).padStart(2, '0');
+  const owner = personas[state.timerOwnerPersonaId];
   return `
     <section class="view-layout">
       <article class="app-card">
-        <span class="kicker">Safety Net</span>
+        <span class="kicker">생활 안전망</span>
         <h2 class="view-title">2탭 안에 도움 요청이 가능한 안전 센터</h2>
         <p class="description">야간 귀가, 방문자 응대, 갑작스러운 통증, 외로움까지 모두 “혼자 판단해야 하는 순간”을 줄이는 모듈입니다.</p>
         <div class="safety-timer">
           <div>
             <small>안심 귀가 타이머</small>
-            <div class="timer-number">${minutes}:${seconds}</div>
-            <p class="helper-text">시간이 지나면 신뢰 연락처에 체크 요청 알림을 보냄</p>
+            <div class="timer-number" role="timer" aria-live="off" aria-label="남은 시간 ${minutes}분 ${seconds}초">${minutes}:${seconds}</div>
+            <p class="helper-text">${state.timerRunning && owner ? `${owner.choiceLabel} 상황에서 실행 중` : '시간이 지나면 신뢰 연락처 공유 준비 화면을 엽니다.'}</p>
           </div>
           <button class="action-btn" id="timerBtn">${state.timerRunning ? '타이머 중지' : '30분 시작'}</button>
         </div>
         <div class="quick-action-row" style="margin-top:16px;">
-          <button class="quick-btn" data-emergency="119">119 연결</button>
-          <button class="quick-btn" data-emergency="guardian">보호자 공유</button>
-          <button class="quick-btn" data-emergency="manager">관리실 연락</button>
+          <button class="quick-btn" data-emergency="119">119 전화 준비</button>
+          <button class="quick-btn" data-emergency="guardian">보호자 공유 준비</button>
+          <button class="quick-btn" data-emergency="manager">관리실 연락 준비</button>
         </div>
+        <div style="margin-top:16px;">${pendingActionPanel()}</div>
         <div class="list" style="margin-top:16px;">
           <div class="list-item">
-            <div class="safe-icon">🚶</div>
+            <div class="safe-icon" aria-hidden="true">걷</div>
             <div><strong>안심 귀가</strong><p class="helper-text">야간 이동 중 예상 도착 시간과 현재 상태를 공유</p></div>
           </div>
           <div class="list-item">
-            <div class="safe-icon">🚪</div>
+            <div class="safe-icon" aria-hidden="true">문</div>
             <div><strong>방문자 대응</strong><p class="helper-text">문 앞 택배 / 수리기사 / 낯선 방문자 상황별 문구 제공</p></div>
           </div>
           <div class="list-item">
-            <div class="safe-icon">🆘</div>
+            <div class="safe-icon" aria-hidden="true">SOS</div>
             <div><strong>위급상황</strong><p class="helper-text">119, 보호자, 복지사, 친구에게 같은 정보를 한번에 전달</p></div>
           </div>
         </div>
@@ -878,7 +1138,7 @@ function safetyView() {
             <span class="status-pill urgent">4순위</span>
             <strong>119 / 112</strong>
             <p class="helper-text">응급 / 범죄 위험</p>
-            <button class="contact-btn primary" data-emergency="119">긴급 버튼</button>
+            <button class="contact-btn primary" data-emergency="119">전화 준비</button>
           </div>
         </div>
       </article>
@@ -892,12 +1152,12 @@ function globalView() {
   return `
     <section class="view-layout">
       <article class="app-card">
-        <span class="kicker">Global Mode</span>
+        <span class="kicker">외국어 생활 지원</span>
         <h2 class="view-title">${persona.name}를 위한 다국어 배달·생활 지원</h2>
         <p class="description">사용자가 이해하기 쉬운 언어로 먼저 확인하고, 기사님이나 관리실에 보낼 수 있는 <strong>한국어 전달문</strong>으로 바꿔줍니다.</p>
         <div class="segment-row">
           ${Object.entries(translations).map(([key, value]) => `
-            <button class="segment-btn ${state.language === key ? 'active' : ''}" data-lang="${key}">
+            <button class="segment-btn ${state.language === key ? 'active' : ''}" data-lang="${key}" aria-pressed="${state.language === key}">
               <strong>${value.label}</strong><br />
               <small>${key.toUpperCase()}</small>
             </button>
@@ -924,12 +1184,12 @@ function globalView() {
         </div>
       </article>
       <article class="app-card">
-        <span class="kicker">Context Guide</span>
+        <span class="kicker">맥락 가이드</span>
         <h3>번역만으로 해결되지 않는 부분</h3>
         <div class="list">
           ${lang.context.map(item => `
             <div class="list-item">
-              <div class="emoji">💬</div>
+              <div class="emoji" aria-hidden="true">말</div>
               <div><p class="helper-text">${item}</p></div>
             </div>
           `).join('')}
@@ -964,24 +1224,27 @@ function globalView() {
 }
 
 function careView() {
+  const checked = state.careStatus.lastCheckinAt;
+  const statusText = checked ? `안부 체크 완료 · ${state.careStatus.lastCheckinLabel || dateTimeLabel(checked)}` : '아직 안부 체크 전';
+  const statusHelp = checked ? '오늘 상태가 괜찮음으로 기록되었습니다. 필요하면 이력에서 다시 확인할 수 있습니다.' : '괜찮아요 버튼을 누르면 오늘 안부 체크 상태가 즉시 반영됩니다.';
   return `
     <section class="view-layout care-layout">
       <article class="app-card care-hero">
-        <span class="kicker">Care Mode</span>
+        <span class="kicker">큰 글씨 도움</span>
         <h2 class="view-title">도움이 필요하신가요?</h2>
         <p class="description">고령자 모드는 정보를 많이 보여주기보다, 바로 누를 수 있는 큰 버튼과 현재 상태 확인을 우선합니다.</p>
         <div class="care-action-grid">
           <button class="care-action primary" data-emergency="guardian">
-            가족에게 연락
-            <span>상황을 문자로 공유합니다</span>
+            가족 연락 준비
+            <span>보내기 전 문구를 먼저 확인합니다</span>
           </button>
           <button class="care-action emergency" data-emergency="119">
-            119 연결
-            <span>응급 상황일 때 바로 시작</span>
+            119 전화 준비
+            <span>응급 상황일 때 전화 전 확인</span>
           </button>
           <button class="care-action" data-emergency="caregiver">
-            복지사 호출
-            <span>돌봄 담당자에게 알립니다</span>
+            복지사 호출 준비
+            <span>돌봄 담당자에게 보낼 문구 확인</span>
           </button>
           <button class="care-action" data-care-checkin="ok">
             괜찮아요
@@ -990,15 +1253,16 @@ function careView() {
         </div>
         <div class="care-status-panel">
           <div>
-            <span class="status-pill safe">오늘 상태</span>
-            <strong>아직 안부 체크 전</strong>
-            <p class="helper-text">버튼을 누르면 활동 이력에 보호자 공유용 로그가 남습니다.</p>
+            <span class="status-pill ${checked ? 'safe' : 'warn'}">오늘 상태</span>
+            <strong>${statusText}</strong>
+            <p class="helper-text">${statusHelp}</p>
           </div>
           <button class="inline-chip" data-go-view="activity">이력 보기</button>
         </div>
+        <div style="margin-top:18px;">${pendingActionPanel()}</div>
       </article>
       <article class="app-card">
-        <span class="kicker">Caregiver Link</span>
+        <span class="kicker">보호자 연결</span>
         <h3>보호자와 이어지는 기능</h3>
         <div class="timeline">
           <div class="timeline-item">
@@ -1023,18 +1287,28 @@ function careView() {
   `;
 }
 
+function activityStatusClass(status) {
+  if (status === 'completed' || status === 'copied' || status === 'ready') return 'safe';
+  if (status === 'pending') return 'warn';
+  if (status === 'cancelled') return 'urgent';
+  return 'info';
+}
+
 function activityView() {
+  const persona = currentPersona();
   const completedTasks = onboardingTasks.filter(task => state.checklist[task.id]);
   const copyCount = state.activities.filter(item => item.type === 'copy').length;
-  const safetyCount = state.activities.filter(item => item.type === 'safety' || item.type === 'care').length;
+  const safetyCount = state.activities.filter(item => item.type === 'safety' || item.type === 'care' || item.type === 'action').length;
+  const pendingCount = state.activities.filter(item => item.status === 'pending').length;
   const recentActivities = state.activities.length ? state.activities : [
     {
       id: 'empty',
       type: 'help',
       title: '아직 기록된 활동이 없습니다',
       detail: '체크리스트 완료, 문구 복사, 안전 버튼 실행, 안부 체크를 하면 여기에 후속 관리 이력이 쌓입니다.',
-      personaName: personas[state.persona].name,
+      personaName: persona ? persona.name : '상황 선택 전',
       time: '대기 중',
+      status: 'viewed',
       actionView: 'dashboard',
       actionText: '홈 보기'
     }
@@ -1043,7 +1317,7 @@ function activityView() {
   return `
     <section class="view-layout">
       <article class="app-card">
-        <span class="kicker">Activity Log</span>
+        <span class="kicker">활동 이력</span>
         <h2 class="view-title">문제 해결 이후까지 남기는 활동 이력</h2>
         <p class="description">혼자ON은 행동에서 끝나지 않고, 무엇을 했고 다음에 무엇을 이어가야 하는지 기록으로 남깁니다.</p>
         <div class="grid-3">
@@ -1060,7 +1334,12 @@ function activityView() {
           <div class="stat-card">
             <small>안전·케어 실행</small>
             <strong>${safetyCount}</strong>
-            <p class="helper-text">타이머 / 긴급 버튼 / 안부 체크</p>
+            <p class="helper-text">타이머 / 연락 준비 / 안부 체크</p>
+          </div>
+          <div class="stat-card">
+            <small>진행 중</small>
+            <strong>${pendingCount}</strong>
+            <p class="helper-text">연락 준비 / 확인 대기</p>
           </div>
         </div>
         <div class="activity-list">
@@ -1068,7 +1347,8 @@ function activityView() {
             <div class="log-item">
               <div class="log-meta">
                 <span class="status-pill info">${activityLabel(item.type)}</span>
-                <span>${item.time} · ${item.personaName}</span>
+                <span class="status-pill ${activityStatusClass(item.status)}">${statusLabels[item.status] || '확인'}</span>
+                <span>${item.createdAt ? dateTimeLabel(item.createdAt) : item.time} · ${item.personaName}</span>
               </div>
               <strong>${item.title}</strong>
               <p>${item.detail}</p>
@@ -1078,7 +1358,7 @@ function activityView() {
         </div>
       </article>
       <article class="app-card">
-        <span class="kicker">Follow-up</span>
+        <span class="kicker">후속 관리</span>
         <h3>후속 관리 흐름</h3>
         <div class="timeline">
           <div class="timeline-item">
@@ -1164,8 +1444,21 @@ function roadmapView() {
   `;
 }
 
-function renderView() {
+function focusRenderedView(focusTarget) {
+  if (!focusTarget) return;
+  const target = app.querySelector(focusTarget) || app.querySelector('.view-title') || app;
+  if (target && typeof target.focus === 'function') {
+    if (!target.hasAttribute('tabindex') && !/^(BUTTON|A|INPUT|SELECT|TEXTAREA)$/.test(target.tagName)) {
+      target.setAttribute('tabindex', '-1');
+    }
+    target.focus({ preventScroll: true });
+  }
+}
+
+function renderView(options = {}) {
   document.body.classList.toggle('care-mode-active', state.view === 'care');
+  const persona = currentPersona();
+  document.title = `${moduleLabel(state.view)} · ${persona ? persona.choiceLabel : '상황 선택'} · 혼자ON`;
   switch (state.view) {
     case 'dashboard':
       app.innerHTML = dashboardView();
@@ -1199,6 +1492,7 @@ function renderView() {
       break;
   }
   bindDynamicEvents();
+  focusRenderedView(options.focusTarget);
 }
 
 function toggleChecklist(id, checked) {
@@ -1211,15 +1505,20 @@ function toggleChecklist(id, checked) {
       checked ? '체크리스트 완료' : '체크리스트 미완료로 변경',
       task.title,
       'onboarding',
-      '체크리스트 보기'
+      '체크리스트 보기',
+      { status: checked ? 'completed' : 'changed' }
     );
   }
-  renderView();
+  renderView({ focusTarget: `[data-check="${id}"]` });
 }
 
 function startTimer() {
   state.timerRunning = true;
-  addActivity('safety', '안심 귀가 타이머 시작', '30분 체크 타이머를 실행했습니다.', 'safety', '안전 센터 보기');
+  state.timerOwnerPersonaId = state.persona;
+  addActivity('safety', '안심 귀가 타이머 시작', '30분 체크 타이머를 실행했습니다.', 'safety', '안전 센터 보기', {
+    personaId: state.timerOwnerPersonaId,
+    status: 'pending'
+  });
   if (state.timerId) clearInterval(state.timerId);
   state.timerId = setInterval(() => {
     state.remainingSeconds -= 1;
@@ -1228,9 +1527,18 @@ function startTimer() {
       state.timerId = null;
       state.timerRunning = false;
       state.remainingSeconds = 30 * 60;
-      addActivity('safety', '안심 귀가 체크 시간 종료', '신뢰 연락처 공유 플로우가 필요한 상태입니다.', 'safety', '안전 센터 보기');
+      state.pendingAction = {
+        type: 'guardian',
+        personaId: state.timerOwnerPersonaId,
+        createdAt: new Date().toISOString()
+      };
+      addActivity('safety', '안심 귀가 체크 시간 종료', '신뢰 연락처 공유 준비가 필요한 상태입니다.', 'safety', '안전 센터 보기', {
+        personaId: state.timerOwnerPersonaId,
+        status: 'pending'
+      });
+      state.timerOwnerPersonaId = null;
       showToast('안심 귀가 체크 시간이 종료되었습니다. 연락처 공유 플로우를 실행하세요.');
-      renderView();
+      renderView({ focusTarget: '.action-confirm-panel' });
       return;
     }
     const timerNumber = document.querySelector('.timer-number');
@@ -1238,6 +1546,7 @@ function startTimer() {
       const minutes = Math.floor(state.remainingSeconds / 60);
       const seconds = String(state.remainingSeconds % 60).padStart(2, '0');
       timerNumber.textContent = `${minutes}:${seconds}`;
+      timerNumber.setAttribute('aria-label', `남은 시간 ${minutes}분 ${seconds}초`);
     }
   }, 1000);
 }
@@ -1247,8 +1556,51 @@ function stopTimer() {
   clearInterval(state.timerId);
   state.timerId = null;
   state.remainingSeconds = 30 * 60;
-  addActivity('safety', '안심 귀가 타이머 중지', '귀가 체크 타이머를 수동으로 종료했습니다.', 'safety', '안전 센터 보기');
-  renderView();
+  addActivity('safety', '안심 귀가 타이머 중지', '귀가 체크 타이머를 수동으로 종료했습니다.', 'safety', '안전 센터 보기', {
+    personaId: state.timerOwnerPersonaId || state.persona,
+    status: 'cancelled'
+  });
+  state.timerOwnerPersonaId = null;
+  renderView({ focusTarget: '#timerBtn' });
+}
+
+function handleEmergency(type) {
+  const flow = emergencyFlows[type];
+  if (!flow) return;
+  state.pendingAction = {
+    type,
+    personaId: state.persona,
+    createdAt: new Date().toISOString()
+  };
+  addActivity('action', `${flow.title} 열림`, flow.detail, state.view, '계속 보기', {
+    personaId: state.persona,
+    status: 'pending'
+  });
+  renderView({ focusTarget: '.action-confirm-panel' });
+  showToast('실제 연락 전 확인 화면을 열었습니다.');
+}
+
+function confirmEmergency(type) {
+  const flow = emergencyFlows[type];
+  if (!flow) return;
+  addActivity('action', `${flow.label} 준비 완료`, `${flow.primaryLabel} 단계까지 확인했습니다.`, 'activity', '이력 보기', {
+    personaId: state.pendingAction ? state.pendingAction.personaId : state.persona,
+    status: 'ready'
+  });
+  state.pendingAction = null;
+  renderView({ focusTarget: '.view-title' });
+  showToast('연락 준비 상태로 기록했습니다.');
+}
+
+function cancelEmergency() {
+  const flow = state.pendingAction ? emergencyFlows[state.pendingAction.type] : null;
+  addActivity('action', `${flow ? flow.label : '연락 준비'} 취소`, '실제 연락 없이 준비 화면을 닫았습니다.', 'activity', '이력 보기', {
+    personaId: state.pendingAction ? state.pendingAction.personaId : state.persona,
+    status: 'cancelled'
+  });
+  state.pendingAction = null;
+  renderView({ focusTarget: '.view-title' });
+  showToast('연락 준비를 취소했습니다.');
 }
 
 function bindDynamicEvents() {
@@ -1259,22 +1611,21 @@ function bindDynamicEvents() {
   app.querySelectorAll('[data-copy]').forEach(btn => {
     btn.addEventListener('click', () => {
       const label = btn.dataset.copyLabel ? decodeURIComponent(btn.dataset.copyLabel) : '문구';
-      copyText(decodeURIComponent(btn.dataset.copy), label);
+      copyText(decodeURIComponent(btn.dataset.copy), label, btn);
     });
   });
 
   app.querySelectorAll('[data-scenario]').forEach(btn => {
     btn.addEventListener('click', () => {
       state.scenario = btn.dataset.scenario;
-      addActivity('help', `${helpScenarios[state.scenario].title} 확인`, helpScenarios[state.scenario].summary, 'help', '도움 요청 보기');
-      renderView();
+      renderView({ focusTarget: `[data-scenario="${state.scenario}"]` });
     });
   });
 
   app.querySelectorAll('[data-lang]').forEach(btn => {
     btn.addEventListener('click', () => {
       state.language = btn.dataset.lang;
-      renderView();
+      renderView({ focusTarget: `[data-lang="${state.language}"]` });
     });
   });
 
@@ -1286,28 +1637,34 @@ function bindDynamicEvents() {
         showToast('안심 귀가 타이머를 중지했습니다.');
       } else {
         startTimer();
-        renderView();
+        renderView({ focusTarget: '#timerBtn' });
         showToast('안심 귀가 타이머를 시작했습니다.');
       }
     });
   }
 
   app.querySelectorAll('[data-emergency]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const map = {
-        '119': '긴급 구조 요청 플로우를 시작합니다.',
-        guardian: '보호자 / 신뢰 연락처 공유 플로우를 엽니다.',
-        manager: '관리실 / 경비실 연결 플로우를 엽니다.',
-        caregiver: '복지사 / 돌봄 담당자 연결 플로우를 엽니다.'
-      };
-      addActivity('safety', map[btn.dataset.emergency] || '연결 플로우 실행', '긴급 버튼을 눌러 다음 행동을 시작했습니다.', 'activity', '이력 보기');
-      showToast(map[btn.dataset.emergency] || '연결 플로우를 실행합니다.');
-    });
+    btn.addEventListener('click', () => handleEmergency(btn.dataset.emergency));
+  });
+
+  app.querySelectorAll('[data-confirm-emergency]').forEach(btn => {
+    btn.addEventListener('click', () => confirmEmergency(btn.dataset.confirmEmergency));
+  });
+
+  app.querySelectorAll('[data-cancel-emergency]').forEach(btn => {
+    btn.addEventListener('click', () => cancelEmergency());
   });
 
   app.querySelectorAll('[data-care-checkin]').forEach(btn => {
     btn.addEventListener('click', () => {
-      addActivity('care', '안부 체크 완료', '오늘 상태를 괜찮음으로 기록했습니다.', 'activity', '이력 보기');
+      const checkedAt = new Date().toISOString();
+      state.careStatus = {
+        lastCheckinAt: checkedAt,
+        lastCheckinLabel: dateTimeLabel(checkedAt)
+      };
+      saveJSON('honjaonCareStatus', state.careStatus);
+      addActivity('care', '안부 체크 완료', '오늘 상태를 괜찮음으로 기록했습니다.', 'activity', '이력 보기', { status: 'completed' });
+      renderView({ focusTarget: '[data-care-checkin="ok"]' });
       showToast('오늘 안부 체크가 기록되었습니다.');
     });
   });
@@ -1315,11 +1672,29 @@ function bindDynamicEvents() {
   app.querySelectorAll('[data-go-view]').forEach(btn => {
     btn.addEventListener('click', () => setView(btn.dataset.goView));
   });
+
+  app.querySelectorAll('[data-scroll-target]').forEach(btn => {
+    btn.addEventListener('click', () => scrollToSection(btn.dataset.scrollTarget));
+  });
 }
 
 document.querySelectorAll('[data-go-view]').forEach(btn => {
   btn.addEventListener('click', () => setView(btn.dataset.goView));
 });
+
+document.querySelectorAll('[data-scroll-target]').forEach(btn => {
+  btn.addEventListener('click', () => scrollToSection(btn.dataset.scrollTarget));
+});
+
+if ('ResizeObserver' in window) {
+  const navObserver = new ResizeObserver(entries => {
+    const entry = entries[0];
+    if (entry) {
+      document.documentElement.style.setProperty('--bottom-nav-height', `${Math.ceil(entry.contentRect.height)}px`);
+    }
+  });
+  navObserver.observe(appNav);
+}
 
 renderNav();
 renderPersonaGrid();
