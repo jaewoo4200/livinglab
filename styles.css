@@ -105,7 +105,7 @@ button {
   margin: 18px 0 10px;
   font-size: clamp(2.6rem, 6vw, 4.4rem);
   line-height: 0.95;
-  letter-spacing: -0.04em;
+  letter-spacing: 0;
 }
 
 .hero h1 span {
@@ -754,7 +754,7 @@ button {
 .timer-number {
   font-size: 2rem;
   font-weight: 800;
-  letter-spacing: -0.04em;
+  letter-spacing: 0;
 }
 
 .contact-card {
@@ -1125,7 +1125,7 @@ button {
 
 @media (max-width: 720px) {
   .site-shell {
-    padding: 18px 14px 110px;
+    padding: 14px 12px calc(132px + env(safe-area-inset-bottom));
   }
 
   .hero-copy,
@@ -1139,25 +1139,35 @@ button {
 
   .app-nav {
     position: fixed;
-    left: 12px;
-    right: 12px;
-    bottom: 12px;
+    left: 10px;
+    right: 10px;
+    bottom: calc(10px + env(safe-area-inset-bottom));
     top: auto;
     margin-bottom: 0;
-    padding: 10px;
+    padding: 8px;
     gap: 8px;
     overflow-x: auto;
     flex-wrap: nowrap;
+    border-radius: 22px;
+    scroll-padding-inline: 10px;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .app-nav::-webkit-scrollbar {
+    display: none;
   }
 
   .nav-chip {
     flex: 0 0 auto;
-    padding: 10px 12px;
+    min-height: 44px;
+    padding: 10px 14px;
     font-size: 0.9rem;
   }
 
   .hero h1 {
-    font-size: 2.55rem;
+    font-size: 2.28rem;
+    line-height: 1.08;
   }
 
   .metric-grid,
@@ -1173,5 +1183,77 @@ button {
   .care-status-panel {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .toast {
+    bottom: calc(88px + env(safe-area-inset-bottom));
+    max-width: calc(100% - 28px);
+    border-radius: 18px;
+    text-align: center;
+    white-space: normal;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-copy,
+  .hero-panel,
+  .app-card,
+  .roadmap-card,
+  .persona-card {
+    padding: 18px;
+    border-radius: 20px;
+  }
+
+  .hero-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .primary-btn,
+  .ghost-btn,
+  .quick-btn,
+  .action-btn,
+  .copy-btn,
+  .contact-btn,
+  .inline-chip {
+    min-height: 44px;
+  }
+
+  .persona-photo-wrap {
+    aspect-ratio: 1 / 1;
+  }
+
+  .persona-photo {
+    object-position: center top;
+  }
+
+  .dashboard-profile {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-profile img {
+    width: 100%;
+    height: 180px;
+    border-radius: 18px;
+    object-position: center top;
+  }
+
+  .safety-timer,
+  .bill-item,
+  .flex-between,
+  .screen-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .safety-timer .action-btn,
+  .screen-header .copy-btn {
+    width: 100%;
+  }
+
+  .care-action {
+    min-height: 112px;
+    padding: 18px;
+    font-size: 1.12rem;
   }
 }

@@ -354,6 +354,14 @@ function renderNav() {
   appNav.querySelectorAll('.nav-chip').forEach(chip => {
     chip.addEventListener('click', () => setView(chip.dataset.view));
   });
+
+  const activeChip = appNav.querySelector('.nav-chip.active');
+  if (activeChip) {
+    window.requestAnimationFrame(() => {
+      const targetLeft = activeChip.offsetLeft - (appNav.clientWidth - activeChip.clientWidth) / 2;
+      appNav.scrollTo({ left: Math.max(0, targetLeft), behavior: 'smooth' });
+    });
+  }
 }
 
 function showToast(message) {
@@ -456,7 +464,20 @@ function setView(view) {
   state.view = nextView;
   renderNav();
   renderView();
-  window.scrollTo({ top: appNav.offsetTop - 18, behavior: 'smooth' });
+  const appTop = app.getBoundingClientRect().top + window.scrollY;
+  const isMobile = window.matchMedia('(max-width: 720px)').matches;
+  const offset = isMobile ? 12 : 18;
+  const targetTop = Math.max(0, appTop - offset);
+  if (isMobile) {
+    const previousScrollBehavior = document.documentElement.style.scrollBehavior;
+    document.documentElement.style.scrollBehavior = 'auto';
+    window.scrollTo({ top: targetTop, behavior: 'auto' });
+    window.requestAnimationFrame(() => {
+      document.documentElement.style.scrollBehavior = previousScrollBehavior;
+    });
+    return;
+  }
+  window.scrollTo({ top: targetTop, behavior: 'smooth' });
 }
 
 function renderPersonaGrid() {
