@@ -251,7 +251,8 @@ body.has-persona .demo-hint {
 .inline-chip:focus-visible,
 .care-action:focus-visible,
 .persona-card button:focus-visible,
-.action-link:focus-visible {
+.action-link:focus-visible,
+.back-home-btn:focus-visible {
   outline: 3px solid rgba(16, 24, 39, 0.88);
   outline-offset: 3px;
 }
@@ -604,6 +605,27 @@ body.has-persona .persona-card button {
 #app {
   display: grid;
   gap: 18px;
+}
+
+#app:empty {
+  display: none;
+}
+
+.view-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.back-home-btn {
+  min-height: 42px;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 999px;
+  background: #101827;
+  color: #fff;
+  font-weight: 800;
+  box-shadow: 0 10px 24px rgba(16, 24, 39, 0.16);
 }
 
 .view-layout {
