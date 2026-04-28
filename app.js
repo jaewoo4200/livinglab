@@ -316,7 +316,7 @@ const state = {
   persona: savedPersona(),
   view: 'dashboard',
   scenario: 'admin',
-  language: 'ko',
+  language: 'ru',
   timerRunning: false,
   remainingSeconds: 30 * 60,
   timerId: null,
@@ -448,6 +448,7 @@ function progressRatio(personaId) {
 function setPersona(personaId) {
   state.persona = personaId;
   state.view = preferredViewFor(personaId);
+  if (personaId === 'jenny') state.language = 'ru';
   localStorage.setItem('honjaonPersona', personaId);
   addActivity('persona', `${personas[personaId].name} 모드 전환`, personas[personaId].moduleHint, 'dashboard', '홈 보기');
   renderNav();
@@ -893,7 +894,7 @@ function globalView() {
       <article class="app-card">
         <span class="kicker">Global Mode</span>
         <h2 class="view-title">${persona.name}를 위한 다국어 배달·생활 지원</h2>
-        <p class="description">배달앱, 주소 입력, 기사님 연락, 고객센터 문의, 생활 제도 안내를 단순 번역이 아니라 <strong>한국식 서비스 맥락</strong>까지 포함해 설명합니다.</p>
+        <p class="description">사용자가 이해하기 쉬운 언어로 먼저 확인하고, 기사님이나 관리실에 보낼 수 있는 <strong>한국어 전달문</strong>으로 바꿔줍니다.</p>
         <div class="segment-row">
           ${Object.entries(translations).map(([key, value]) => `
             <button class="segment-btn ${state.language === key ? 'active' : ''}" data-lang="${key}">
@@ -907,15 +908,15 @@ function globalView() {
             <div class="phrase-card">
               <div class="screen-header">
                 <strong>${card.label}</strong>
-                <button class="copy-btn" data-copy="${encodeURIComponent(card.translated[state.language])}" data-copy-label="${encodeURIComponent(card.label)}">번역문 복사</button>
+                <button class="copy-btn" data-copy="${encodeURIComponent(card.ko)}" data-copy-label="${encodeURIComponent(card.label)}">한국어 전달문 복사</button>
               </div>
               <div class="phrase-pair">
-                <span>한국어 원문</span>
-                <p>${card.ko}</p>
+                <span>${lang.label} 원문</span>
+                <p>${card.translated[state.language]}</p>
               </div>
               <div class="phrase-pair translated">
-                <span>${lang.label} 번역</span>
-                <p>${card.translated[state.language]}</p>
+                <span>한국어 번역·전달문</span>
+                <p>${card.ko}</p>
               </div>
               <p class="helper-text">${card.context}</p>
             </div>
