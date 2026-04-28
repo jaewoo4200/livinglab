@@ -5,6 +5,7 @@ const personas = {
     name: '박준호',
     title: '20대 남성 · 첫 자취 4개월차 대학생',
     avatar: 'JH',
+    photo: 'assets/personas/junho.jpg',
     color: '#234c62',
     quote: '혼자 살기 시작하니까 사소한 일까지 다 내가 챙겨야 해서 은근 버겁다.',
     summary: '생활 운영 경험이 적어 집안일·지출 관리·기초 수리에 시행착오를 겪는 유형',
@@ -19,6 +20,7 @@ const personas = {
     name: '김서연',
     title: '20대 여성 · 자취 6개월차 사회초년생',
     avatar: 'SY',
+    photo: 'assets/personas/seoyeon.jpg',
     color: '#ca634d',
     quote: '모르는 것도 많은데 혼자 해결해야 해서, 특히 아프거나 문제가 생기면 겁부터 나요.',
     summary: '생활 시스템 이해와 주거 안전 민감성이 동시에 큰 유형',
@@ -33,6 +35,7 @@ const personas = {
     name: '이정숙',
     title: '독거노인 · 74세 · 고령 1인가구',
     avatar: 'JS',
+    photo: 'assets/personas/jeongsuk.jpg',
     color: '#5b8454',
     quote: '갑자기 몸이 안 좋아질 때 가장 무서운 건, 바로 연락할 사람이 없다는 거예요.',
     summary: '신체적 취약성, 디지털 접근 장벽, 정서적 고립이 동시에 존재하는 유형',
@@ -42,30 +45,31 @@ const personas = {
     quickAction: '케어 모드 켜기',
     moduleHint: '케어 모드 + 안전 센터'
   },
-  wooho: {
-    id: 'wooho',
-    name: '송우호',
-    title: '외국인 유학생 · 한국 정착 초기',
-    avatar: 'WH',
+  jenny: {
+    id: 'jenny',
+    name: '김제니',
+    title: '22세 · 현대무용 전공 러시아인 유학생',
+    avatar: 'JN',
+    photo: 'assets/personas/jenny.jpg',
     color: '#2b64c7',
     quote: '배달은 정말 편리하지만, 가끔 의사소통이나 주소 때문에 스트레스 받아요.',
-    summary: '언어 장벽, 한국식 서비스 흐름의 낯섦, 생활 맥락 이해 부족이 동시에 큰 유형',
-    tags: ['중국인 유학생', '배달 주 3~5회', '다국어 필요'],
-    priorities: ['다국어 주문 보조', '주소 입력/ETA 이해', '생활 규칙 가이드'],
-    risk: '단순 번역보다 한국식 서비스 맥락을 설명해 주지 않으면 불안이 계속 남는다.',
+    summary: '언어 장벽, 한국식 서비스 흐름의 낯설음, 생활 맥락 이해 부족이 동시에 작동하는 초기 정착 사용자',
+    tags: ['러시아인 유학생', '원룸 거주', '배달 주 3~5회', '디지털 속도 높음'],
+    priorities: ['간편한 주문 과정', '번역·채팅 중심 의사소통', '정확한 ETA와 다국어 생활 가이드'],
+    risk: '기사님 전화, 주소 입력, 고객센터 흐름이 낯설면 주문 진행 정보가 불안으로 이어진다.',
     quickAction: '글로벌 모드 열기',
-    moduleHint: '글로벌 모드 + 생활 가이드'
+    moduleHint: '글로벌 모드 + 배달/생활 가이드'
   }
 };
 
 const onboardingTasks = [
-  { id: 'move_in', title: '입주 직후 해야 할 일 확인', desc: '전입신고, 확정일자, 관리비 납부 방식, 도어락 점검 순서 안내', persona: ['junho', 'seoyeon', 'wooho'] },
-  { id: 'garbage', title: '우리 동네 분리수거 규칙 저장', desc: '거주 지역별 배출 요일, 음식물봉투, 대형폐기물 처리 가이드', persona: ['junho', 'seoyeon', 'wooho'] },
+  { id: 'move_in', title: '입주 직후 해야 할 일 확인', desc: '전입신고, 확정일자, 관리비 납부 방식, 도어락 점검 순서 안내', persona: ['junho', 'seoyeon', 'jenny'] },
+  { id: 'garbage', title: '우리 동네 분리수거 규칙 저장', desc: '거주 지역별 배출 요일, 음식물봉투, 대형폐기물 처리 가이드', persona: ['junho', 'seoyeon', 'jenny'] },
   { id: 'supplies', title: '필수 생필품 체크', desc: '침구, 수건, 세제, 멀티탭, 구급약, 소화기 등 입주 기본 세트', persona: ['junho', 'seoyeon'] },
-  { id: 'utility', title: '공과금 리마인더 설정', desc: '월세, 관리비, 가스비, 전기세, 인터넷 납부일 알림', persona: ['junho', 'seoyeon', 'wooho'] },
+  { id: 'utility', title: '공과금 리마인더 설정', desc: '월세, 관리비, 가스비, 전기세, 인터넷 납부일 알림', persona: ['junho', 'seoyeon', 'jenny'] },
   { id: 'contacts', title: '도움 요청 연락처 저장', desc: '가족, 친구, 관리실, 집주인, 복지사, 응급 연락망 등록', persona: ['seoyeon', 'jeongsuk'] },
   { id: 'safety', title: '주거 안전 점검', desc: '공동현관, 창문 잠금, 화재 대비, 응급약, 야간 동선, 택배 수령 체크', persona: ['seoyeon', 'jeongsuk'] },
-  { id: 'language', title: '다국어 생활 모드 초기 설정', desc: '한국어/영어/중국어 UI, 자주 쓰는 표현, 주소 포맷 저장', persona: ['wooho'] },
+  { id: 'language', title: '다국어 생활 모드 초기 설정', desc: '한국어/영어/러시아어 UI, 자주 쓰는 표현, 주소 포맷 저장', persona: ['jenny'] },
   { id: 'care', title: '큰 글씨/케어 모드 준비', desc: '폰트 확대, 원터치 도움 요청, 안부 체크 주기 설정', persona: ['jeongsuk'] }
 ];
 
@@ -122,11 +126,11 @@ const helpScenarios = {
   delivery: {
     title: '배달 / 주소 / 기사 연락',
     audience: '외국인 유학생',
-    summary: '한국어 메뉴, 옵션, 기사 연락, 주소 포맷을 이해하기 쉽게 바꿔줍니다.',
+    summary: '한국어 메뉴, 옵션, 기사님 연락, 주소 입력 방식, 고객센터 흐름을 이해하기 쉽게 바꿔줍니다.',
     steps: [
       '선호 언어를 선택하고 자주 가는 주소를 저장한다.',
       '주문 단계에서 복잡한 옵션을 쉬운 표현으로 다시 보여준다.',
-      '기사님께 보낼 메시지를 번역/복사하고 ETA 변동을 설명한다.'
+      '기사님께 보낼 메시지를 번역/복사하고 정확한 ETA와 문의 흐름을 설명한다.'
     ],
     checklist: ['건물명 + 상세주소', '공동현관 출입 방식', '문 앞 요청 문구', '결제 수단'],
     template: '안녕하세요. 한국어가 조금 서툴러서 문자로 부탁드립니다. 문 앞에 두고 가 주세요. 건물 비밀번호는 [0000]입니다. 감사합니다.',
@@ -166,12 +170,12 @@ const translations = {
       'Door delivery options can vary depending on the building and security rules.'
     ]
   },
-  zh: {
-    label: '中文',
+  ru: {
+    label: 'Русский',
     context: [
-      'ETA 通常表示预计进度，不一定是完全准确的到达时间。',
-      '骑手打电话大多是为了确认地址、门禁或送达方式。',
-      '“放门口”和“当面交付”会根据楼栋和门禁规则有所不同。'
+      'ETA обычно означает примерный статус доставки, а не точное обещанное время.',
+      'Курьер обычно звонит, чтобы уточнить адрес, вход в подъезд или способ передачи.',
+      'Опции “оставить у двери” и “передать лично” могут работать по-разному в зависимости от здания.'
     ]
   }
 };
@@ -184,7 +188,7 @@ const phraseCards = [
     translated: {
       ko: '문 앞에 두고 가 주세요.',
       en: 'Please leave it at the door.',
-      zh: '请放在门口。'
+      ru: 'Пожалуйста, оставьте у двери.'
     },
     context: '배달 수령 방식이 헷갈릴 때 전화 대신 문자로 전달하기 좋은 문장'
   },
@@ -195,7 +199,7 @@ const phraseCards = [
     translated: {
       ko: '전화보다 문자 부탁드립니다.',
       en: 'Please text me instead of calling.',
-      zh: '请发短信，不要打电话。'
+      ru: 'Пожалуйста, напишите сообщение вместо звонка.'
     },
     context: '한국어 통화가 부담스러울 때 기사님께 의사소통 방식을 먼저 제안'
   },
@@ -206,7 +210,7 @@ const phraseCards = [
     translated: {
       ko: '건물 비밀번호는 0000입니다.',
       en: 'The building password is 0000.',
-      zh: '大门密码是0000。'
+      ru: 'Пароль от входа в здание: 0000.'
     },
     context: '공동현관 출입이 필요한 건물에서 주소 오류나 재전화 가능성을 줄임'
   },
@@ -217,7 +221,7 @@ const phraseCards = [
     translated: {
       ko: '지금 어디쯤 오고 있나요?',
       en: 'How long will it take to arrive?',
-      zh: '大概还有多久到？'
+      ru: 'Сколько примерно осталось до прибытия?'
     },
     context: '도착 예정 시간이 바뀌었을 때 진행 상황을 부드럽게 확인'
   }
@@ -246,11 +250,11 @@ const roadmap = [
 
 const moduleCatalog = [
   { view: 'dashboard', label: '오늘 홈', always: true },
-  { view: 'onboarding', label: '정착 체크', personas: ['junho', 'seoyeon', 'wooho'] },
+  { view: 'onboarding', label: '정착 체크', personas: ['junho', 'seoyeon', 'jenny'] },
   { view: 'life', label: '생활 관리', personas: ['junho', 'seoyeon'] },
-  { view: 'help', label: '도움 요청', personas: ['junho', 'seoyeon', 'wooho'] },
+  { view: 'help', label: '도움 요청', personas: ['junho', 'seoyeon', 'jenny'] },
   { view: 'safety', label: '안전 센터', personas: ['seoyeon', 'jeongsuk'] },
-  { view: 'global', label: '글로벌 모드', personas: ['wooho'] },
+  { view: 'global', label: '글로벌 모드', personas: ['jenny'] },
   { view: 'care', label: '케어 모드', personas: ['jeongsuk'] },
   { view: 'activity', label: '활동 이력', always: true },
   { view: 'roadmap', label: '서비스 구조', always: true }
@@ -259,7 +263,7 @@ const moduleCatalog = [
 const preferredViews = {
   junho: 'onboarding',
   seoyeon: 'safety',
-  wooho: 'global',
+  jenny: 'global',
   jeongsuk: 'care'
 };
 
@@ -274,7 +278,7 @@ const personaQuickActions = {
     { view: 'help', label: '병원·수리 연결' },
     { view: 'onboarding', label: '도움망 저장' }
   ],
-  wooho: [
+  jenny: [
     { view: 'global', label: '번역 문구' },
     { view: 'help', label: '생활 제도 안내' },
     { view: 'onboarding', label: '정착 설정' }
@@ -304,6 +308,7 @@ function saveJSON(key, value) {
 
 function savedPersona() {
   const personaId = localStorage.getItem('honjaonPersona');
+  if (personaId === 'wooho') return 'jenny';
   return personas[personaId] ? personaId : 'junho';
 }
 
@@ -457,6 +462,9 @@ function setView(view) {
 function renderPersonaGrid() {
   personaGrid.innerHTML = Object.values(personas).map(persona => `
     <article class="persona-card ${state.persona === persona.id ? 'selected' : ''}">
+      <div class="persona-photo-wrap">
+        <img class="persona-photo" src="${persona.photo}" alt="${persona.name} 페르소나 사진" loading="lazy" />
+      </div>
       <div class="persona-top">
         <div class="persona-avatar" style="background:${persona.color}">${persona.avatar}</div>
         <span class="persona-chip">${state.persona === persona.id ? '현재 선택' : '클릭해서 전환'}</span>
@@ -485,8 +493,13 @@ function dashboardView() {
     <section class="view-layout">
       <article class="app-card">
         <span class="kicker">개인화 대시보드</span>
-        <h2 class="view-title">${persona.name}에게 맞춰진 오늘의 홈</h2>
-        <p class="description">${persona.summary}</p>
+        <div class="dashboard-profile">
+          <img src="${persona.photo}" alt="${persona.name} 페르소나 사진" />
+          <div>
+            <h2 class="view-title">${persona.name}에게 맞춰진 오늘의 홈</h2>
+            <p class="description">${persona.summary}</p>
+          </div>
+        </div>
         <div class="mode-strip">
           <strong>${persona.name} 특화 모드</strong>
           <div class="mode-module-list">
@@ -853,12 +866,13 @@ function safetyView() {
 
 function globalView() {
   const lang = translations[state.language];
+  const persona = personas[state.persona];
   return `
     <section class="view-layout">
       <article class="app-card">
         <span class="kicker">Global Mode</span>
-        <h2 class="view-title">외국인 유학생을 위한 다국어 생활 지원</h2>
-        <p class="description">배달앱, 주소 입력, 기사 연락, 생활 제도 안내를 단순 번역이 아니라 <strong>한국식 서비스 맥락</strong>까지 포함해 설명합니다.</p>
+        <h2 class="view-title">${persona.name}를 위한 다국어 배달·생활 지원</h2>
+        <p class="description">배달앱, 주소 입력, 기사님 연락, 고객센터 문의, 생활 제도 안내를 단순 번역이 아니라 <strong>한국식 서비스 맥락</strong>까지 포함해 설명합니다.</p>
         <div class="segment-row">
           ${Object.entries(translations).map(([key, value]) => `
             <button class="segment-btn ${state.language === key ? 'active' : ''}" data-lang="${key}">

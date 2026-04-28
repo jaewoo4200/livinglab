@@ -331,6 +331,21 @@ button {
   border-radius: 22px;
 }
 
+.persona-photo-wrap {
+  aspect-ratio: 4 / 3;
+  margin: -2px -2px 16px;
+  border-radius: 18px;
+  overflow: hidden;
+  background: var(--surface-2);
+}
+
+.persona-photo {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
 .persona-top {
   display: flex;
   align-items: center;
@@ -434,6 +449,23 @@ button {
 .view-title {
   margin-top: 0;
   font-size: clamp(1.45rem, 3vw, 2rem);
+}
+
+.dashboard-profile {
+  display: grid;
+  grid-template-columns: 136px minmax(0, 1fr);
+  gap: 18px;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.dashboard-profile img {
+  width: 136px;
+  height: 136px;
+  border-radius: 22px;
+  object-fit: cover;
+  border: 1px solid var(--line);
+  box-shadow: 0 12px 24px rgba(32, 52, 89, 0.1);
 }
 
 .kicker {
@@ -1074,6 +1106,16 @@ button {
 
   .mode-module-list {
     justify-content: flex-start;
+  }
+
+  .dashboard-profile {
+    grid-template-columns: 96px minmax(0, 1fr);
+  }
+
+  .dashboard-profile img {
+    width: 96px;
+    height: 96px;
+    border-radius: 18px;
   }
 
   .footer-links {
