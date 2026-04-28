@@ -252,7 +252,8 @@ body.has-persona .demo-hint {
 .care-action:focus-visible,
 .persona-card button:focus-visible,
 .action-link:focus-visible,
-.back-home-btn:focus-visible {
+.back-home-btn:focus-visible,
+.choice-chip:focus-visible {
   outline: 3px solid rgba(16, 24, 39, 0.88);
   outline-offset: 3px;
 }
@@ -879,6 +880,70 @@ body.has-persona .persona-card button {
   display: grid;
   gap: 12px;
   margin-top: 14px;
+}
+
+.help-builder {
+  display: grid;
+  gap: 14px;
+  margin-top: 16px;
+}
+
+.builder-section,
+.route-result {
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 16px;
+  background: var(--surface);
+}
+
+.choice-chip-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.choice-chip {
+  min-height: 42px;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 999px;
+  background: var(--surface-2);
+  color: var(--text);
+  font-weight: 800;
+}
+
+.choice-chip.active {
+  background: var(--brand);
+  color: #fff;
+  box-shadow: 0 10px 24px rgba(53, 87, 212, 0.24);
+}
+
+.mini-flow-grid {
+  display: grid;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.mini-flow-step {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr);
+  gap: 12px;
+  align-items: center;
+  padding: 12px;
+  border-radius: 14px;
+  background: var(--surface-2);
+}
+
+.mini-flow-step small {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--brand);
+  color: #fff;
+  font-weight: 900;
 }
 
 .list-item,

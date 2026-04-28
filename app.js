@@ -63,8 +63,8 @@ const personas = {
     tags: ['러시아인 유학생', '원룸 거주', '배달 주 3~5회', '디지털 속도 높음'],
     priorities: ['간편한 주문 과정', '번역·채팅 중심 의사소통', '정확한 ETA와 다국어 생활 가이드'],
     risk: '기사님 전화, 주소 입력, 고객센터 흐름이 낯설면 주문 진행 정보가 불안으로 이어진다.',
-    quickAction: '글로벌 모드 열기',
-    moduleHint: '외국어 생활 지원 + 배달/생활 가이드',
+    quickAction: '번역 도움 열기',
+    moduleHint: '번역 도움 + 배달/생활 가이드',
     choiceLabel: '외국어 생활 지원',
     choiceSummary: '한국어 주문, 주소, 기사님 연락, 생활 제도 이해가 아직 부담스러운 경우'
   }
@@ -98,6 +98,8 @@ const helpScenarios = {
       '해야 할 일 목록을 우선순위(오늘 / 이번 주 / 이번 달)로 분류한다.',
       '각 항목별 준비물, 방문 장소, 온라인 링크, 주의사항을 확인한다.'
     ],
+    issues: ['관리비 납부 방식', '분리수거 요일', '전입신고 준비'],
+    routes: ['관리실', '주민센터', '학교 국제처'],
     checklist: ['신분증 또는 외국인등록증', '임대차계약서', '거주지 주소', '관리실/집주인 연락처'],
     template: '안녕하세요. 새로 입주한 세입자입니다. 관리비 납부 방식과 분리수거 규칙을 안내받고 싶습니다. 가능하신 시간에 문자로 알려주실 수 있을까요?',
     nearby: ['주민센터 / 행정복지센터', '학교 국제처', '관리실', '생활관/기숙사 행정실'],
@@ -112,6 +114,8 @@ const helpScenarios = {
       '집주인/관리실/수리업체 중 누구에게 연락해야 하는지 분기한다.',
       '복붙 가능한 요청 문구와 예상 비용 체크리스트를 제공한다.'
     ],
+    issues: ['전등이 나갔어요', '배수구가 막혔어요', '도어락이 이상해요'],
+    routes: ['관리실', '집주인', '수리업체'],
     checklist: ['문제 사진 1~2장', '발생 시간', '증상 설명', '계약서상 수리 책임 조항'],
     template: '안녕하세요. 현재 집에서 [전등/수도/배수구] 문제로 불편을 겪고 있습니다. 사진과 함께 증상을 보내드립니다. 확인 후 수리 가능 시간과 진행 방법을 알려주실 수 있을까요?',
     nearby: ['관리실', '집주인', '지역 수리 파트너', '학교 생활 민원 창구'],
@@ -126,6 +130,8 @@ const helpScenarios = {
       '현재 시간과 이동 가능 여부를 확인한다.',
       '전화, 채팅, 보호자 공유 중 가장 빠른 행동을 추천한다.'
     ],
+    issues: ['열이 나고 몸살이 있어요', '복통이 심해요', '어지럽고 혼자 있어요'],
+    routes: ['24시간 약국', '가까운 병원', '보호자'],
     checklist: ['현재 증상', '복용 중인 약', '가까운 병원/약국', '보호자 연락처'],
     template: '현재 [열/복통/어지럼증]이 있고 혼자 있어서 판단이 어렵습니다. 가까운 진료 가능 병원이나 약국을 안내받고 싶어요.',
     nearby: ['24시간 약국', '응급실', '지역 병원', '보호자/친구'],
@@ -140,6 +146,8 @@ const helpScenarios = {
       '주문 단계에서 복잡한 옵션을 쉬운 표현으로 다시 보여준다.',
       '기사님께 보낼 메시지를 번역/복사하고 정확한 ETA와 문의 흐름을 설명한다.'
     ],
+    issues: ['기사님 전화를 받기 어려워요', '주소 확인이 필요해요', '문 앞 요청을 보내고 싶어요'],
+    routes: ['기사님 문자', '배달앱 고객센터', '관리실'],
     checklist: ['건물명 + 상세주소', '공동현관 출입 방식', '문 앞 요청 문구', '결제 수단'],
     template: '안녕하세요. 한국어가 조금 서툴러서 문자로 부탁드립니다. 문 앞에 두고 가 주세요. 건물 비밀번호는 [0000]입니다. 감사합니다.',
     nearby: ['배달앱 고객센터', '국제학생 상담센터', '기숙사/관리실', '학교 주변 음식점'],
@@ -154,6 +162,8 @@ const helpScenarios = {
       '즉시 행동할 버튼을 2개만 보여준다.',
       '필요하면 보호자/친구/복지사에게 현재 상태를 공유한다.'
     ],
+    issues: ['야간 귀가 중이에요', '낯선 방문자가 있어요', '집 주변 이상 소리가 나요'],
+    routes: ['보호자', '관리실', '112 / 119'],
     checklist: ['신뢰 연락처 3명', '관리실/경비실', '현관 비밀번호', '귀가 예상 시간'],
     template: '지금 혼자 있고 조금 불안합니다. [현재 위치/상황]이고, 10분 뒤 다시 연락드릴게요. 답이 없으면 확인 부탁드립니다.',
     nearby: ['보호자·친구', '관리실·경비실', '112/119', '복지관·돌봄센터'],
@@ -245,7 +255,7 @@ const roadmap = [
   {
     phase: '상황 대응',
     goal: '상황 판단, 행동 추천, 연락 연결, 후속 관리까지 이어지는 흐름형 플랫폼으로 확장한다.',
-    features: ['페르소나별 대시보드', '지역 정보 + 근처 연결', '안전 센터', '글로벌 모드', '케어 모드', '활동 이력'],
+    features: ['페르소나별 대시보드', '지역 정보 + 근처 연결', '안전 센터', '번역 도움', '케어 모드', '활동 이력'],
     limit: '처음에는 검증된 지역 정보와 연락처 큐레이션을 중심으로 빠르게 안내한다.'
   },
   {
@@ -359,16 +369,16 @@ const personaDemoMissions = {
   junho: [
     { id: 'junho-onboarding', view: 'onboarding', title: '입주 첫 주 체크', desc: '전입신고, 분리수거, 공과금까지 한 번에 확인', accent: 'blue' },
     { id: 'junho-life', view: 'life', title: '이번 달 돈 흐름', desc: '월세와 관리비, 생활 루틴을 카드로 정리', accent: 'green' },
-    { id: 'junho-repair', view: 'help', scenario: 'repair', title: '집수리 연락 문구', desc: '관리실·집주인에게 보낼 말을 바로 복사', accent: 'coral' }
+    { id: 'junho-repair', view: 'help', scenario: 'repair', issue: '전등이 나갔어요', route: '관리실', title: '집수리 연락 문구', desc: '관리실·집주인에게 보낼 말을 바로 복사', accent: 'coral' }
   ],
   seoyeon: [
     { id: 'seoyeon-timer', view: 'safety', startTimer: true, title: '안심 귀가 타이머', desc: '불안한 이동 상황을 30분 체크로 관리', accent: 'green' },
-    { id: 'seoyeon-medical', view: 'help', scenario: 'medical', title: '아플 때 연락 문구', desc: '병원·약국·지인에게 보낼 요청을 정리', accent: 'blue' },
+    { id: 'seoyeon-medical', view: 'help', scenario: 'medical', issue: '어지럽고 혼자 있어요', route: '가까운 병원', title: '아플 때 연락 문구', desc: '병원·약국·지인에게 보낼 요청을 정리', accent: 'blue' },
     { id: 'seoyeon-contacts', view: 'onboarding', title: '신뢰 연락망 저장', desc: '도움이 필요한 순간 누를 순서를 만든다', accent: 'coral' }
   ],
   jenny: [
     { id: 'jenny-delivery', view: 'global', language: 'ru', title: '배달 기사님 메시지', desc: '러시아어로 이해하고 한국어 전달문 복사', accent: 'blue' },
-    { id: 'jenny-admin', view: 'help', scenario: 'admin', title: '생활 제도 질문', desc: '관리비·분리수거·행정 절차를 쉬운 흐름으로', accent: 'green' },
+    { id: 'jenny-admin', view: 'help', scenario: 'admin', issue: '관리비 납부 방식', route: '관리실', title: '생활 제도 질문', desc: '관리비·분리수거·행정 절차를 쉬운 흐름으로', accent: 'green' },
     { id: 'jenny-language', view: 'onboarding', title: '주소·언어 초기 설정', desc: '자주 쓰는 주소와 표현을 먼저 저장', accent: 'coral' }
   ],
   jeongsuk: [
@@ -470,6 +480,7 @@ const state = {
   timerRunning: false,
   remainingSeconds: 30 * 60,
   timerId: null,
+  helpSelections: {},
   checklist: loadJSON('honjaonChecklist', {}),
   activities: loadJSON('honjaonActivities', [], normalizeActivities),
   careStatus: loadJSON('honjaonCareStatus', { lastCheckinAt: null, lastCheckinLabel: null }, normalizeCareStatus)
@@ -627,6 +638,38 @@ function recordCareCheckin(options = {}) {
   return checkedAt;
 }
 
+function defaultHelpSelection(scenarioKey) {
+  const scenario = helpScenarios[scenarioKey] || helpScenarios.admin;
+  return {
+    issue: scenario.issues[0],
+    route: scenario.routes[0]
+  };
+}
+
+function helpSelectionFor(scenarioKey = state.scenario) {
+  const scenario = helpScenarios[scenarioKey] || helpScenarios.admin;
+  const saved = state.helpSelections[scenarioKey] || {};
+  return {
+    issue: scenario.issues.includes(saved.issue) ? saved.issue : scenario.issues[0],
+    route: scenario.routes.includes(saved.route) ? saved.route : scenario.routes[0]
+  };
+}
+
+function setHelpSelection(scenarioKey, updates = {}) {
+  const base = helpSelectionFor(scenarioKey);
+  state.helpSelections[scenarioKey] = { ...base, ...updates };
+}
+
+function selectHelpScenario(scenarioKey, updates = {}) {
+  if (!helpScenarios[scenarioKey]) return;
+  state.scenario = scenarioKey;
+  state.helpSelections[scenarioKey] = { ...defaultHelpSelection(scenarioKey), ...updates };
+}
+
+function generatedHelpMessage(scenario, selection) {
+  return `안녕하세요. 혼자 거주 중인데 ${selection.issue} 문제로 도움이 필요합니다. ${selection.route}에 문의드리면 될지 확인 부탁드립니다. 가능하면 다음 진행 방법과 준비해야 할 내용을 문자로 안내해 주세요.`;
+}
+
 function activityLabel(type) {
   const labels = {
     checklist: '체크리스트',
@@ -695,7 +738,7 @@ function setPersona(personaId) {
   if (!personas[personaId]) return;
   state.persona = personaId;
   state.view = 'dashboard';
-  state.scenario = defaultScenarioByPersona[personaId] || 'admin';
+  selectHelpScenario(defaultScenarioByPersona[personaId] || 'admin');
   state.navMoreOpen = false;
   state.pendingAction = null;
   if (personaId === 'jenny') state.language = 'ru';
@@ -732,7 +775,12 @@ function runMission(missionId, fallbackView = 'dashboard') {
     setView(preferredViewFor(state.persona));
     return;
   }
-  if (mission.scenario) state.scenario = mission.scenario;
+  if (mission.scenario) {
+    selectHelpScenario(mission.scenario, {
+      issue: mission.issue,
+      route: mission.route
+    });
+  }
   if (mission.language) state.language = mission.language;
   if (mission.emergency) {
     state.pendingAction = {
@@ -1012,12 +1060,14 @@ function lifeView() {
 
 function helpView() {
   const scenario = helpScenarios[state.scenario];
+  const selection = helpSelectionFor(state.scenario);
+  const generatedMessage = generatedHelpMessage(scenario, selection);
   return `
     <section class="view-layout">
       <article class="app-card">
         <span class="kicker">도움 요청 경로</span>
         <h2 class="view-title">문제가 생기면, 누구에게 어떻게 요청할까?</h2>
-        <p class="description">사용자는 문제 자체보다도 <strong>누구에게, 어떤 말로, 어떤 순서로</strong> 요청해야 하는지에서 막히는 경우가 많습니다. 혼자ON은 이 과정을 3스텝으로 줄입니다.</p>
+        <p class="description">문제와 연결 대상을 고르면 바로 보낼 문구와 준비물이 만들어집니다.</p>
         <div class="segment-row">
           ${Object.entries(helpScenarios).map(([key, value]) => `
             <button class="segment-btn ${state.scenario === key ? 'active' : ''}" data-scenario="${key}" aria-pressed="${state.scenario === key}">
@@ -1026,29 +1076,50 @@ function helpView() {
             </button>
           `).join('')}
         </div>
-        <div class="issue-card" style="margin-top:16px;">
-          <div class="flex-between">
-            <div>
-              <h3>${scenario.title}</h3>
-              <p class="helper-text">${scenario.summary}</p>
+        <div class="help-builder">
+          <div class="builder-section">
+            <span class="status-pill info">1. 문제 선택</span>
+            <div class="choice-chip-grid">
+              ${scenario.issues.map(issue => `
+                <button class="choice-chip ${selection.issue === issue ? 'active' : ''}" data-help-issue="${encodeURIComponent(issue)}" aria-pressed="${selection.issue === issue}">
+                  ${issue}
+                </button>
+              `).join('')}
             </div>
-            <span class="status-pill info">${scenario.audience}</span>
           </div>
-          <div class="timeline" style="margin-top:14px;">
-            ${scenario.steps.map(step => `
-              <div class="timeline-item">
-                <strong>${step}</strong>
-              </div>
+          <div class="builder-section">
+            <span class="status-pill safe">2. 연결 대상</span>
+            <div class="choice-chip-grid">
+              ${scenario.routes.map(route => `
+                <button class="choice-chip ${selection.route === route ? 'active' : ''}" data-help-route="${encodeURIComponent(route)}" aria-pressed="${selection.route === route}">
+                  ${route}
+                </button>
             `).join('')}
+            </div>
+          </div>
+          <div class="route-result">
+            <span class="kicker">추천 실행 흐름</span>
+            <h3>${selection.route}에 ${selection.issue} 문의</h3>
+            <div class="mini-flow-grid">
+              ${scenario.steps.map((step, index) => `
+                <div class="mini-flow-step">
+                  <small>0${index + 1}</small>
+                  <strong>${step}</strong>
+                </div>
+              `).join('')}
+            </div>
           </div>
         </div>
       </article>
       <article class="app-card">
         <span class="kicker">실행 패키지</span>
-        <h3>복붙 가능한 요청 템플릿</h3>
+        <h3>자동 생성된 요청 문구</h3>
         <div class="template-card">
-          <div class="template-body">${scenario.template}</div>
-          <button class="copy-btn" data-copy="${encodeURIComponent(scenario.template)}" data-copy-label="${encodeURIComponent(scenario.title)}" style="margin-top:12px;">문구 복사</button>
+          <div class="template-body">${generatedMessage}</div>
+          <div class="quick-action-row action-row" style="margin-top:12px;">
+            <button class="copy-btn" data-copy="${encodeURIComponent(generatedMessage)}" data-copy-label="${encodeURIComponent(scenario.title)}">문구 복사</button>
+            <button class="quick-btn" data-help-ready>준비 완료 기록</button>
+          </div>
         </div>
         <div class="grid-2" style="margin-top:14px;">
           <div class="helper-card">
@@ -1664,8 +1735,31 @@ function bindDynamicEvents() {
 
   app.querySelectorAll('[data-scenario]').forEach(btn => {
     btn.addEventListener('click', () => {
-      state.scenario = btn.dataset.scenario;
+      selectHelpScenario(btn.dataset.scenario);
       renderView({ focusTarget: `[data-scenario="${state.scenario}"]` });
+    });
+  });
+
+  app.querySelectorAll('[data-help-issue]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      setHelpSelection(state.scenario, { issue: decodeURIComponent(btn.dataset.helpIssue) });
+      renderView({ focusTarget: `[data-help-issue="${btn.dataset.helpIssue}"]` });
+    });
+  });
+
+  app.querySelectorAll('[data-help-route]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      setHelpSelection(state.scenario, { route: decodeURIComponent(btn.dataset.helpRoute) });
+      renderView({ focusTarget: `[data-help-route="${btn.dataset.helpRoute}"]` });
+    });
+  });
+
+  app.querySelectorAll('[data-help-ready]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const scenario = helpScenarios[state.scenario];
+      const selection = helpSelectionFor(state.scenario);
+      addActivity('help', `${scenario.title} 준비 완료`, `${selection.issue} → ${selection.route}`, 'activity', '기록 보기', { status: 'ready' });
+      showToast('도움 요청 준비가 기록되었습니다.');
     });
   });
 
