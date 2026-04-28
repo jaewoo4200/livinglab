@@ -10,83 +10,26 @@
 <body>
   <a class="skip-link" href="#app">본문으로 건너뛰기</a>
   <div class="site-shell">
-    <header class="hero">
-      <div class="hero-copy">
-        <span class="eyebrow">Living Support Platform</span>
-        <h1>혼자ON <span>생활 지원</span></h1>
-        <p class="hero-subtitle">1인 가구 생활의 <strong>정보·안전·접근성</strong> 문제를 한곳에서 풀어주는 웹 기반 생활 운영 플랫폼</p>
-        <div class="hero-actions">
-          <button class="primary-btn" data-scroll-target="personaSection">내 상황 선택하기</button>
-          <button class="ghost-btn" data-go-view="roadmap">서비스 구조 보기</button>
-        </div>
-        <ul class="hero-tags">
-          <li>첫 자취 온보딩</li>
-          <li>생활비·공과금 관리</li>
-          <li>도움 요청 라우팅</li>
-          <li>외국인 다국어 지원</li>
-          <li>고령자 케어 모드</li>
-          <li>활동 이력 관리</li>
-        </ul>
+    <section class="intro-screen" id="personaSection" aria-labelledby="personaTitle">
+      <div class="intro-topbar">
+        <strong>혼자ON</strong>
+        <button class="text-link" data-go-view="roadmap">서비스 구조</button>
       </div>
-      <div class="hero-panel">
-        <div class="metric-card">
-          <p class="metric-label">서비스 핵심 흐름</p>
-          <h3>정보 모음집 → <br />상황 대응형 생활 운영 OS</h3>
-          <p>개인화, 지역 정보, 긴급 대응, 다국어, 케어 모드까지 확장</p>
-        </div>
-        <div class="metric-grid">
-          <div class="metric-mini">
-            <span>핵심 사용자군</span>
-            <strong>4 Persona</strong>
-          </div>
-          <div class="metric-mini">
-            <span>주요 모듈</span>
-            <strong>8 Modules</strong>
-          </div>
-          <div class="metric-mini">
-            <span>접속 환경</span>
-            <strong>Mobile + Desktop</strong>
-          </div>
-          <div class="metric-mini">
-            <span>실행 원칙</span>
-            <strong>2 Tap Safety</strong>
-          </div>
-        </div>
-      </div>
-    </header>
-
-    <section class="persona-section" id="personaSection" aria-labelledby="personaTitle">
-      <div class="section-header">
-        <div>
-          <span class="eyebrow">Core Personas</span>
-          <h2 id="personaTitle">나에게 가까운 생활 상황 선택</h2>
-        </div>
-        <p>이름보다 상황을 먼저 고르면 홈 구성과 빠른 행동이 달라집니다.</p>
+      <div class="intro-copy">
+        <span class="eyebrow">Live Demo</span>
+        <h1 id="personaTitle">오늘 시연할 사용자를 선택하세요</h1>
+        <p>페르소나를 고르면 맞춤 미션 보드가 열리고, 각 미션을 누르며 기능 흐름을 바로 보여줄 수 있습니다.</p>
       </div>
       <div class="persona-grid" id="personaGrid"></div>
+      <div class="demo-hint">
+        <span>시연 흐름</span>
+        <strong>선택 → 미션 카드 → 실행 화면 → 활동 이력</strong>
+      </div>
     </section>
 
     <nav class="app-nav" id="appNav" aria-label="앱 주요 화면"></nav>
 
     <main id="app" tabindex="-1"></main>
-
-    <section class="roadmap-summary">
-      <article class="roadmap-card roadmap-phase-1">
-        <div class="phase-badge">기본 생활</div>
-        <h2>기초 생활 정리</h2>
-        <p>온보딩 체크리스트, 생활 가이드, 공과금 리마인더, 기본 도움 요청 템플릿</p>
-      </article>
-      <article class="roadmap-card roadmap-phase-2 active-phase">
-        <div class="phase-badge">상황 대응</div>
-        <h2>내 상황에 맞는 지원</h2>
-        <p>페르소나별 대시보드, 지역 맞춤 정보, 안전 센터, 다국어 지원, 케어 모드, 활동 이력</p>
-      </article>
-      <article class="roadmap-card roadmap-phase-3">
-        <div class="phase-badge">지역 연결</div>
-        <h2>생활 안전망 확장</h2>
-        <p>학교·복지관·관리실·지역 병원·수리 파트너 연동, PWA 알림, 운영 대시보드</p>
-      </article>
-    </section>
 
     <footer class="site-footer">
       <div>

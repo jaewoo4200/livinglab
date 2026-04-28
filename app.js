@@ -257,14 +257,14 @@ const roadmap = [
 ];
 
 const moduleCatalog = [
-  { view: 'dashboard', label: '오늘 홈', always: true },
-  { view: 'onboarding', label: '정착 체크', personas: ['junho', 'seoyeon', 'jenny'] },
-  { view: 'life', label: '생활 관리', personas: ['junho', 'seoyeon'] },
-  { view: 'help', label: '도움 요청', personas: ['junho', 'seoyeon', 'jenny'] },
+  { view: 'dashboard', label: '오늘 할 일', always: true },
+  { view: 'onboarding', label: '입주 체크', personas: ['junho', 'seoyeon', 'jenny'] },
+  { view: 'life', label: '돈·집안일', personas: ['junho', 'seoyeon'] },
+  { view: 'help', label: '연락 문구', personas: ['junho', 'seoyeon', 'jenny'] },
   { view: 'safety', label: '안전 센터', personas: ['seoyeon', 'jeongsuk'] },
-  { view: 'global', label: '외국어 지원', personas: ['jenny'] },
+  { view: 'global', label: '번역 도움', personas: ['jenny'] },
   { view: 'care', label: '큰 글씨 도움', personas: ['jeongsuk'] },
-  { view: 'activity', label: '활동 이력', always: true },
+  { view: 'activity', label: '기록', always: true },
   { view: 'roadmap', label: '서비스 구조', always: true }
 ];
 
@@ -277,7 +277,7 @@ const preferredViews = {
 
 const personaQuickActions = {
   junho: [
-    { view: 'onboarding', label: '정착 체크' },
+    { view: 'onboarding', label: '입주 체크' },
     { view: 'life', label: '생활비 관리' },
     { view: 'help', label: '수리 요청' }
   ],
@@ -287,7 +287,7 @@ const personaQuickActions = {
     { view: 'onboarding', label: '도움망 저장' }
   ],
   jenny: [
-    { view: 'global', label: '외국어 문구' },
+    { view: 'global', label: '번역 도움' },
     { view: 'help', label: '생활 제도 안내' },
     { view: 'onboarding', label: '정착 설정' }
   ],
@@ -346,6 +346,29 @@ const statusLabels = {
   completed: '완료',
   cancelled: '취소됨',
   changed: '변경됨'
+};
+
+const personaDemoMissions = {
+  junho: [
+    { view: 'onboarding', title: '입주 첫 주 체크', desc: '전입신고, 분리수거, 공과금까지 한 번에 확인', accent: 'blue' },
+    { view: 'life', title: '이번 달 돈 흐름', desc: '월세와 관리비, 생활 루틴을 카드로 정리', accent: 'green' },
+    { view: 'help', title: '집수리 연락 문구', desc: '관리실·집주인에게 보낼 말을 바로 복사', accent: 'coral' }
+  ],
+  seoyeon: [
+    { view: 'safety', title: '안심 귀가 타이머', desc: '불안한 이동 상황을 30분 체크로 관리', accent: 'green' },
+    { view: 'help', title: '아플 때 연락 문구', desc: '병원·약국·지인에게 보낼 요청을 정리', accent: 'blue' },
+    { view: 'onboarding', title: '신뢰 연락망 저장', desc: '도움이 필요한 순간 누를 순서를 만든다', accent: 'coral' }
+  ],
+  jenny: [
+    { view: 'global', title: '배달 기사님 메시지', desc: '러시아어로 이해하고 한국어 전달문 복사', accent: 'blue' },
+    { view: 'help', title: '생활 제도 질문', desc: '관리비·분리수거·행정 절차를 쉬운 흐름으로', accent: 'green' },
+    { view: 'onboarding', title: '주소·언어 초기 설정', desc: '자주 쓰는 주소와 표현을 먼저 저장', accent: 'coral' }
+  ],
+  jeongsuk: [
+    { view: 'care', title: '큰 글씨 도움 버튼', desc: '가족·119·복지사 연락을 큰 버튼으로 준비', accent: 'green' },
+    { view: 'safety', title: '119 전화 전 확인', desc: '전화 앱을 열기 전 전달 문구를 확인', accent: 'coral' },
+    { view: 'activity', title: '오늘 안부 기록', desc: '괜찮아요 버튼으로 상태를 바로 남긴다', accent: 'blue' }
+  ]
 };
 
 function isPlainObject(value) {
@@ -424,8 +447,8 @@ function saveJSON(key, value) {
 }
 
 function savedPersona() {
-  const personaId = storageGet('honjaonPersona');
-  if (personaId === 'wooho') return 'jenny';
+  const params = new URLSearchParams(window.location.search);
+  const personaId = params.get('persona');
   return personas[personaId] ? personaId : null;
 }
 
@@ -479,10 +502,27 @@ function primaryNavViews() {
   const quickViews = (personaQuickActions[state.persona] || [])
     .map(action => action.view)
     .filter(view => isViewAvailable(view));
-  return new Set(['dashboard', ...quickViews.slice(0, 3), state.view]);
+  const views = ['dashboard'];
+  quickViews.forEach(view => {
+    if (!views.includes(view) && views.length < 4) views.push(view);
+  });
+  if (state.view && !views.includes(state.view)) {
+    if (views.length >= 4) {
+      views[views.length - 1] = state.view;
+    } else {
+      views.push(state.view);
+    }
+  }
+  return new Set(views);
 }
 
 function renderNav() {
+  if (!state.persona) {
+    appNav.hidden = true;
+    appNav.innerHTML = '';
+    return;
+  }
+  appNav.hidden = false;
   const primaryViews = primaryNavViews();
   appNav.innerHTML = activeModulesFor().map(module => `
     <button
@@ -644,7 +684,7 @@ function setPersona(personaId) {
   renderPersonaGrid();
   renderView({ focusTarget: '.view-title' });
   scrollToApp();
-  showToast(`${personas[personaId].choiceLabel} 홈으로 전환되었습니다.`);
+  showToast('오늘 필요한 기능만 모았어요.');
 }
 
 function setView(view) {
@@ -687,25 +727,27 @@ function scrollToSection(sectionId) {
 function renderPersonaGrid() {
   personaGrid.innerHTML = Object.values(personas).map(persona => `
     <article class="persona-card ${state.persona === persona.id ? 'selected' : ''}" aria-label="${persona.choiceLabel}">
-      <div class="persona-photo-wrap">
-        <img class="persona-photo" src="${persona.photo}" alt="${persona.choiceLabel} 상황 예시 이미지" loading="lazy" />
-      </div>
       <div class="persona-top">
-        <div class="persona-avatar" style="background:${persona.color}">${persona.avatar}</div>
+        <div class="persona-avatar" style="background:${persona.color}">
+          <img src="${persona.photo}" alt="" loading="lazy" />
+        </div>
         <span class="persona-chip">${state.persona === persona.id ? '현재 선택' : '상황 선택'}</span>
       </div>
       <h3>${persona.choiceLabel}</h3>
       <p class="description">${persona.choiceSummary}</p>
-      <p class="persona-quote">“${persona.quote}”</p>
-      <div class="persona-meta">${persona.tags.map(tag => `<span class="persona-pill">${tag}</span>`).join('')}</div>
-      <p class="persona-footer"><strong>예시 인물</strong> · ${persona.name}, ${persona.title}</p>
-      <p class="persona-footer"><strong>핵심 흐름</strong> · ${persona.moduleHint}</p>
-      <button data-persona="${persona.id}" aria-pressed="${state.persona === persona.id}">${state.persona === persona.id ? '선택됨' : '이 상황으로 홈 보기'}</button>
+      <div class="persona-meta">
+        ${persona.priorities.slice(0, 2).map(tag => `<span class="persona-pill">${tag}</span>`).join('')}
+      </div>
+      <button data-persona="${persona.id}" aria-pressed="${state.persona === persona.id}">${state.persona === persona.id ? '선택됨' : '이 화면으로 시작'}</button>
     </article>
   `).join('');
 
   personaGrid.querySelectorAll('[data-persona]').forEach(btn => {
-    btn.addEventListener('click', () => setPersona(btn.dataset.persona));
+    btn.addEventListener('click', () => {
+      btn.textContent = '홈 준비 중';
+      btn.closest('.persona-card')?.classList.add('choosing');
+      window.setTimeout(() => setPersona(btn.dataset.persona), prefersReducedMotion() ? 0 : 180);
+    });
   });
 }
 
@@ -713,25 +755,10 @@ function dashboardView() {
   const persona = personas[state.persona];
   if (!persona) {
     return `
-      <section class="view-layout">
-        <article class="app-card onboarding-gate">
-          <span class="kicker">상황 선택 필요</span>
-          <h2 class="view-title">나에게 가까운 생활 상황을 먼저 골라 주세요</h2>
-          <p class="description">혼자ON은 이름이나 나이보다 지금 겪는 문제를 기준으로 홈, 빠른 행동, 도움 요청 흐름을 바꿉니다.</p>
-          <div class="quick-action-row" style="margin-top:16px;">
-            <button class="quick-btn" data-scroll-target="personaSection">상황 선택하기</button>
-            <button class="quick-btn secondary" data-go-view="roadmap">서비스 구조 보기</button>
-          </div>
-        </article>
-        <article class="app-card">
-          <span class="kicker">첫 30초 흐름</span>
-          <h3>상황 선택 → 개인화 홈 → 추천 행동</h3>
-          <div class="timeline">
-            <div class="timeline-item"><strong>1. 현재 상황 선택</strong><p>첫 자취, 안전 도움, 외국어 지원, 큰 글씨 케어 중 가까운 문제를 고릅니다.</p></div>
-            <div class="timeline-item"><strong>2. 개인화 홈 확인</strong><p>필요한 모듈만 하단 탐색과 홈 카드에 나타납니다.</p></div>
-            <div class="timeline-item"><strong>3. 바로 실행</strong><p>체크리스트, 번역 문구, 안전 확인, 케어 버튼으로 이어집니다.</p></div>
-          </div>
-        </article>
+      <section class="empty-demo-state">
+        <span class="kicker">Ready</span>
+        <h2 class="view-title">위에서 페르소나를 선택하면 시연 화면이 열립니다</h2>
+        <p class="description">내일 발표에서는 카드를 하나 고르고, 열린 미션을 순서대로 눌러 보여주면 됩니다.</p>
       </section>
     `;
   }
@@ -739,109 +766,71 @@ function dashboardView() {
   const ratio = progressRatio(state.persona);
   const personaModules = activeModulesFor().filter(module => !module.always);
   const quickActions = personaQuickActions[state.persona] || personaModules.slice(0, 3);
+  const missions = personaDemoMissions[state.persona] || quickActions.map(action => ({
+    view: action.view,
+    title: action.label,
+    desc: moduleLabel(action.view),
+    accent: 'blue'
+  }));
   return `
-    <section class="view-layout">
-      <article class="app-card">
-        <span class="kicker">개인화 대시보드</span>
+    <section class="mission-hero">
+      <article class="mission-profile app-card">
         <div class="dashboard-profile">
           <img src="${persona.photo}" alt="${persona.choiceLabel} 상황 예시 이미지" />
           <div>
-            <h2 class="view-title">${persona.choiceLabel}에 맞춘 오늘의 홈</h2>
-            <p class="description">${persona.summary}</p>
+            <span class="kicker">오늘의 시연 사용자</span>
+            <h2 class="view-title">${persona.choiceLabel}</h2>
+            <p class="description">${persona.name} · ${persona.title}</p>
+            <p class="persona-quote">“${persona.quote}”</p>
           </div>
         </div>
-        <div class="mode-strip">
-          <strong>${persona.choiceLabel} 특화 흐름</strong>
-          <div class="mode-module-list">
-            ${personaModules.map(module => `<span>${module.label}</span>`).join('')}
+        <div class="demo-progress" aria-label="시연 준비 상태">
+          <div>
+            <small>준비된 미션</small>
+            <strong>${missions.length}개</strong>
           </div>
-        </div>
-        <div class="grid-3">
-          <div class="stat-card">
-            <small>온보딩 진행률</small>
+          <div>
+            <small>체크 진행률</small>
             <strong>${ratio}%</strong>
-            <p class="helper-text">${completedCount(state.persona)} / ${filteredTasks(state.persona).length} 완료</p>
           </div>
-          <div class="stat-card">
-            <small>핵심 우선순위</small>
-            <strong>${persona.priorities[0]}</strong>
-            <p class="helper-text">가장 먼저 해결해야 할 항목</p>
-          </div>
-          <div class="stat-card">
-            <small>바로 가기</small>
+          <div>
+            <small>핵심 행동</small>
             <strong>${persona.quickAction}</strong>
-            <p class="helper-text">상황별 CTA가 홈에 노출됨</p>
           </div>
-        </div>
-        <div class="note-box" style="margin-top:16px;">
-          <strong>지금 먼저 챙길 점</strong>
-          <p class="helper-text">${persona.risk}</p>
-        </div>
-        <div class="quick-action-row" style="margin-top:16px;">
-          ${quickActions.map(action => `<button class="quick-btn" data-go-view="${action.view}">${action.label}</button>`).join('')}
         </div>
       </article>
-      <article class="app-card">
-        <span class="kicker">오늘의 추천 흐름</span>
-        <h3>지금 당장 해야 할 일 3가지</h3>
-        <div class="list">
-          ${tasks.map((task, index) => `
-            <div class="list-item">
-              <div class="emoji">${['1️⃣', '2️⃣', '3️⃣'][index]}</div>
-              <div>
-                <strong>${task.title}</strong>
-                <p class="helper-text">${task.desc}</p>
-              </div>
-            </div>
+      <article class="app-card mission-board">
+        <span class="kicker">Mission Board</span>
+        <h3>눌러서 바로 시연하기</h3>
+        <div class="mission-grid">
+          ${missions.map((mission, index) => `
+            <button class="mission-card ${mission.accent}" data-go-view="${mission.view}" data-mission-title="${mission.title}">
+              <span>0${index + 1}</span>
+              <strong>${mission.title}</strong>
+              <small>${mission.desc}</small>
+            </button>
           `).join('')}
-        </div>
-        <div class="mini-phone">
-          <div class="phone-notch"></div>
-          <div class="phone-card">
-            <strong>${persona.choiceLabel} 홈</strong>
-            <div class="phone-line" style="width:75%"></div>
-            <div class="phone-line" style="width:52%"></div>
-            <div class="phone-pill">${persona.quickAction}</div>
-          </div>
-          <div class="phone-card">
-            ${personaModules.slice(0, 3).map(module => `<div class="phone-chip">${module.label}</div>`).join('')}
-          </div>
-          <div class="phone-card">
-            <div class="phone-bar"></div>
-            <div class="phone-bar" style="width:${Math.max(20, ratio)}%"></div>
-            <small>이 홈은 선택한 페르소나에 맞춰 필요한 모듈만 보여줍니다.</small>
-          </div>
         </div>
       </article>
     </section>
-    <section class="grid-3">
-      <article class="app-card">
-        <span class="kicker">핵심 모듈</span>
-        <h3>정착 시작 패키지</h3>
-        <ul class="bullet-list">
-          <li>입주 첫 주 우선순위 자동 정렬</li>
-          <li>준비물 / 링크 / 연락처 묶음 제공</li>
-          <li>행정·생활 규칙을 쉬운 말로 설명</li>
-        </ul>
-      </article>
-      <article class="app-card">
-        <span class="kicker">핵심 모듈</span>
-        <h3>도움 요청 경로</h3>
-        <ul class="bullet-list">
-          <li>증상 / 문제 / 상황 선택만으로 분기</li>
-          <li>누구에게 연락할지 자동 제안</li>
-          <li>복붙 가능한 메시지 템플릿 제공</li>
-        </ul>
-      </article>
-      <article class="app-card">
-        <span class="kicker">핵심 모듈</span>
-        <h3>생활 안전망</h3>
-        <ul class="bullet-list">
-          <li>2탭 안에 구조 요청</li>
-          <li>귀가 확인 타이머 / 안부 체크</li>
-          <li>고령자 큰 글씨 / 음성형 UI 지원</li>
-        </ul>
-      </article>
+    <section class="app-card demo-brief">
+      <div>
+        <span class="kicker">Why this screen</span>
+        <h3>이 사용자가 막히는 순간</h3>
+        <p class="helper-text">${persona.risk}</p>
+      </div>
+      <div class="mode-module-list">
+        ${personaModules.map(module => `<span>${module.label}</span>`).join('')}
+      </div>
+    </section>
+    <section class="grid-3 compact-task-grid">
+      ${tasks.map((task, index) => `
+        <article class="app-card">
+          <span class="kicker">Next ${index + 1}</span>
+          <h3>${task.title}</h3>
+          <p class="helper-text">${task.desc}</p>
+        </article>
+      `).join('')}
     </section>
   `;
 }
@@ -1066,7 +1055,7 @@ function pendingActionPanel() {
       <div class="template-body">${flow.message}</div>
       <div class="quick-action-row action-row">
         <button class="copy-btn" data-copy="${encodeURIComponent(flow.message)}" data-copy-label="${encodeURIComponent(flow.label)}">문구 복사</button>
-        ${flow.href ? `<a class="action-link primary" href="${flow.href}" aria-label="${flow.label} 전화 앱 열기">${flow.primaryLabel}</a>` : `<button class="quick-btn" data-confirm-emergency="${flow.type}">${flow.primaryLabel}</button>`}
+        ${flow.href ? `<a class="action-link primary" href="${flow.href}" data-tel-emergency="${flow.type}" aria-label="${flow.label} 전화 앱 열기">${flow.primaryLabel}</a>` : `<button class="quick-btn" data-confirm-emergency="${flow.type}">${flow.primaryLabel}</button>`}
         <button class="inline-chip" data-cancel-emergency>취소</button>
       </div>
     </div>
@@ -1392,6 +1381,14 @@ function activityView() {
 
 function roadmapView() {
   return `
+    ${state.persona ? '' : `
+      <section class="app-card choice-return-card">
+        <span class="kicker">먼저 사용자 선택</span>
+        <h2 class="view-title">서비스 구조를 본 뒤, 페르소나를 골라 시연을 시작하세요</h2>
+        <p class="helper-text">혼자ON은 모든 기능을 한꺼번에 보여주기보다 사용자의 상황에 맞는 화면만 먼저 열어주는 방식입니다.</p>
+        <button class="quick-btn" data-scroll-target="personaSection">페르소나 선택으로 돌아가기</button>
+      </section>
+    `}
     <section class="grid-3">
       ${roadmap.map(item => `
         <article class="app-card">
@@ -1457,6 +1454,7 @@ function focusRenderedView(focusTarget) {
 
 function renderView(options = {}) {
   document.body.classList.toggle('care-mode-active', state.view === 'care');
+  document.body.classList.toggle('has-persona', Boolean(state.persona));
   const persona = currentPersona();
   document.title = `${moduleLabel(state.view)} · ${persona ? persona.choiceLabel : '상황 선택'} · 혼자ON`;
   switch (state.view) {
@@ -1651,6 +1649,19 @@ function bindDynamicEvents() {
     btn.addEventListener('click', () => confirmEmergency(btn.dataset.confirmEmergency));
   });
 
+  app.querySelectorAll('[data-tel-emergency]').forEach(link => {
+    link.addEventListener('click', () => {
+      const flow = emergencyFlows[link.dataset.telEmergency];
+      if (!flow) return;
+      addActivity('action', `${flow.label} 전화 앱 열기`, '전화 앱을 열기 전 전달 문구를 확인했습니다.', 'activity', '이력 보기', {
+        personaId: state.pendingAction ? state.pendingAction.personaId : state.persona,
+        status: 'ready'
+      });
+      state.pendingAction = null;
+      showToast('전화 전 확인 상태로 기록했습니다.');
+    });
+  });
+
   app.querySelectorAll('[data-cancel-emergency]').forEach(btn => {
     btn.addEventListener('click', () => cancelEmergency());
   });
@@ -1670,7 +1681,12 @@ function bindDynamicEvents() {
   });
 
   app.querySelectorAll('[data-go-view]').forEach(btn => {
-    btn.addEventListener('click', () => setView(btn.dataset.goView));
+    btn.addEventListener('click', () => {
+      if (btn.dataset.missionTitle) {
+        addActivity('action', `미션 시작 · ${btn.dataset.missionTitle}`, moduleLabel(btn.dataset.goView), btn.dataset.goView, '미션 다시 보기', { status: 'pending' });
+      }
+      setView(btn.dataset.goView);
+    });
   });
 
   app.querySelectorAll('[data-scroll-target]').forEach(btn => {
